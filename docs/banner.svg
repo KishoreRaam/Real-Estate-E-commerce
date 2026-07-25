@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-labelledby="t d">
+  <title id="t">Kaani — See the exact shape of your land</title>
+  <desc id="d">A drafting sheet showing a DTCP layout with clickable plots, one plot highlighted with its record.</desc>
+
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#464646" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#9C9A9A" stroke-width="1" stroke-opacity="0.55"/>
+    </pattern>
+  </defs>
+
+  <!-- paper ground + drafting grid -->
+  <rect width="1200" height="420" fill="#FBF5EA"/>
+  <rect width="1200" height="420" fill="url(#grid)"/>
+  <rect x="0.5" y="0.5" width="1199" height="419" fill="none" stroke="#464646" stroke-opacity="0.14"/>
+
+  <!-- sheet corner crosshairs -->
+  <g stroke="#464646" stroke-opacity="0.42" stroke-width="1" fill="none">
+    <path d="M18 32V18h14"/><path d="M1182 32V18h-14"/>
+    <path d="M18 388v14h14"/><path d="M1182 388v14h-14"/>
+  </g>
+
+  <!-- ── copy ─────────────────────────────────────────────── -->
+  <text x="72" y="104" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="12" letter-spacing="3.4" fill="#8F4E39">DTCP-APPROVED LAYOUTS · COIMBATORE</text>
+
+  <!-- wordmark: the "i" dot is a surveyor's north tick -->
+  <g>
+    <line x1="79" y1="170" x2="79" y2="148" stroke="#464646" stroke-opacity="0.45" stroke-width="2"/>
+    <path d="M79 130 L87 152 L79 146 L71 152 Z" fill="#A35E47"/>
+    <text x="98" y="169" font-family="'Catamaran','Segoe UI',Helvetica,Arial,sans-serif" font-size="46" font-weight="800" letter-spacing="-1" fill="#464646">Kaani</text>
+  </g>
+
+  <text x="72" y="234" font-family="'Catamaran','Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="800" letter-spacing="-0.8" fill="#464646">See the exact shape</text>
+  <text x="72" y="278" font-family="'Catamaran','Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="800" letter-spacing="-0.8" fill="#464646">of your land.</text>
+
+  <text x="72" y="314" font-family="'Hind Madurai','Segoe UI',Helvetica,Arial,sans-serif" font-size="16" fill="#464646" fill-opacity="0.82">Every plot on the approved layout — traced, measured, and matched</text>
+  <text x="72" y="336" font-family="'Hind Madurai','Segoe UI',Helvetica,Arial,sans-serif" font-size="16" fill="#464646" fill-opacity="0.82">to its survey number. Check the land before you call anyone.</text>
+
+  <text x="72" y="374" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="11" letter-spacing="1.2" fill="#464646" fill-opacity="0.62">GREEN VALLEY NAGAR · THUDIYALUR · SCALE 1" = 20 FT</text>
+
+  <!-- ── the sheet ────────────────────────────────────────── -->
+  <g font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="8" fill="#464646" fill-opacity="0.5" text-anchor="middle">
+    <text x="692" y="74">E:0</text><text x="799" y="74">E:100</text><text x="906" y="74">E:200</text><text x="1013" y="74">E:300</text><text x="1120" y="74">E:400</text>
+  </g>
+
+  <rect x="680" y="84" width="452" height="252" fill="none" stroke="#464646" stroke-opacity="0.18"/>
+  <g stroke="#464646" stroke-opacity="0.45" stroke-width="1" fill="none">
+    <path d="M680 92v-8h8"/><path d="M1132 92v-8h-8"/>
+    <path d="M680 328v8h8"/><path d="M1132 328v8h-8"/>
+  </g>
+
+  <!-- top tier: plots 1–5 -->
+  <g fill="none" stroke="#464646" stroke-opacity="0.55" stroke-width="1.2">
+    <polygon points="695,105 774,104 775,190 694,189"/>
+    <polygon points="780,104 860,105 859,191 781,189"/>
+    <polygon points="866,105 946,103 945,190 867,190"/>
+    <polygon points="952,104 1031,105 1032,189 951,190"/>
+    <polygon points="1037,103 1117,105 1116,190 1038,189"/>
+  </g>
+  <g font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="11" fill="#464646" fill-opacity="0.5" text-anchor="middle">
+    <text x="735" y="152">01</text><text x="820" y="152">02</text><text x="906" y="152">03</text><text x="991" y="152">04</text><text x="1077" y="152">05</text>
+  </g>
+
+  <!-- internal road -->
+  <line x1="692" y1="213" x2="1074" y2="213" stroke="#9C9A9A" stroke-width="1" stroke-dasharray="11 8"/>
+  <rect x="856" y="205" width="100" height="15" fill="#FBF5EA"/>
+  <text x="906" y="216" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="8" letter-spacing="1.6" fill="#464646" fill-opacity="0.62" text-anchor="middle">24'-0" ROAD</text>
+
+  <!-- bottom tier: plots 6–9 + OSR -->
+  <g fill="none" stroke="#464646" stroke-opacity="0.55" stroke-width="1.2">
+    <polygon points="695,237 774,235 775,321 694,322"/>
+    <polygon points="780,236 860,237 859,322 781,321"/>
+    <polygon points="866,235 946,236 945,321 867,322"/>
+  </g>
+  <g font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="11" fill="#464646" fill-opacity="0.5" text-anchor="middle">
+    <text x="735" y="284">06</text><text x="820" y="284">07</text><text x="906" y="284">08</text>
+  </g>
+
+  <!-- open space reservation — never sellable -->
+  <polygon points="1037,236 1117,237 1116,321 1038,322" fill="url(#hatch)" stroke="#9C9A9A" stroke-width="1"/>
+  <text x="1077" y="282" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="8" letter-spacing="0.8" fill="#464646" fill-opacity="0.72" text-anchor="middle">OSR</text>
+  <text x="1077" y="294" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="8" letter-spacing="0.8" fill="#464646" fill-opacity="0.72" text-anchor="middle">PARK</text>
+
+  <!-- selected plot 09 — brick means verified -->
+  <polygon points="952,236 1031,235 1032,322 951,321" fill="#A35E47" fill-opacity="0.2" stroke="#8F4E39" stroke-width="2.2"/>
+  <text x="991" y="278" font-family="'Catamaran','Segoe UI',Helvetica,Arial,sans-serif" font-size="17" font-weight="800" fill="#8F4E39" text-anchor="middle">09</text>
+  <text x="991" y="294" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="9" fill="#8F4E39" text-anchor="middle">33 × 56 ft</text>
+
+  <!-- north arrow, parked in the road band where it occludes nothing -->
+  <circle cx="1100" cy="213" r="14" fill="#FBF5EA"/>
+  <circle cx="1100" cy="213" r="13" fill="none" stroke="#464646" stroke-opacity="0.4"/>
+  <path d="M1100 203 L1105 219 L1100 215 L1095 219 Z" fill="#A35E47"/>
+  <text x="1120" y="217" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="9" fill="#464646" fill-opacity="0.7">N</text>
+
+  <!-- title block: the record for the selected plot -->
+  <rect x="680" y="352" width="452" height="48" fill="#F7E6CA" stroke="#464646" stroke-opacity="0.14"/>
+  <text x="696" y="372" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="10" letter-spacing="0.8" fill="#464646">PLOT 09 · 1,847 SQ FT · 33 × 56 FT</text>
+  <text x="696" y="388" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="10" letter-spacing="0.8" fill="#464646" fill-opacity="0.66">SURVEY 115/1B · WEST FACING · 24 FT ROAD</text>
+  <rect x="1036" y="365" width="80" height="22" fill="#A35E47"/>
+  <path d="M1046 376.5 L1049.5 380 L1055 373.5" fill="none" stroke="#FBF5EA" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1082" y="380" font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="8.5" letter-spacing="1.4" fill="#FBF5EA" text-anchor="middle">VERIFIED</text>
+</svg>

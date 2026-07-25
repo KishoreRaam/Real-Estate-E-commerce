@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 152" width="1200" height="152" role="img" aria-labelledby="pt">
+  <title id="pt">Kaani colour tokens: Paper, Champagne, Concrete, Graphite, Ink, Brick</title>
+  <rect width="1200" height="152" fill="#FBF5EA"/>
+  <rect x="0.5" y="0.5" width="1199" height="151" fill="none" stroke="#464646" stroke-opacity="0.14"/>
+
+  <g font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace">
+    <!-- Paper -->
+    <rect x="24" y="18" width="178" height="56" fill="#FBF5EA" stroke="#464646" stroke-opacity="0.28"/>
+    <text x="24" y="96" font-size="13" font-weight="600" fill="#464646">Paper</text>
+    <text x="24" y="114" font-size="12" fill="#464646" fill-opacity="0.62">#FBF5EA</text>
+    <text x="24" y="134" font-size="11" fill="#464646" fill-opacity="0.62">the drawing surface</text>
+
+    <!-- Champagne -->
+    <rect x="216" y="18" width="178" height="56" fill="#F7E6CA" stroke="#464646" stroke-opacity="0.18"/>
+    <text x="216" y="96" font-size="13" font-weight="600" fill="#464646">Champagne</text>
+    <text x="216" y="114" font-size="12" fill="#464646" fill-opacity="0.62">#F7E6CA</text>
+    <text x="216" y="134" font-size="11" fill="#464646" fill-opacity="0.62">the record</text>
+
+    <!-- Concrete -->
+    <rect x="408" y="18" width="178" height="56" fill="#9C9A9A"/>
+    <text x="408" y="96" font-size="13" font-weight="600" fill="#464646">Concrete</text>
+    <text x="408" y="114" font-size="12" fill="#464646" fill-opacity="0.62">#9C9A9A</text>
+    <text x="408" y="134" font-size="11" fill="#464646" fill-opacity="0.62">rules · pending state</text>
+
+    <!-- Graphite -->
+    <rect x="600" y="18" width="178" height="56" fill="#464646"/>
+    <text x="600" y="96" font-size="13" font-weight="600" fill="#464646">Graphite</text>
+    <text x="600" y="114" font-size="12" fill="#464646" fill-opacity="0.62">#464646</text>
+    <text x="600" y="134" font-size="11" fill="#464646" fill-opacity="0.62">body text · linework</text>
+
+    <!-- Ink -->
+    <rect x="792" y="18" width="178" height="56" fill="#000000"/>
+    <text x="792" y="96" font-size="13" font-weight="600" fill="#464646">Ink</text>
+    <text x="792" y="114" font-size="12" fill="#464646" fill-opacity="0.62">#000000</text>
+    <text x="792" y="134" font-size="11" fill="#464646" fill-opacity="0.62">headings, sparingly</text>
+
+    <!-- Brick -->
+    <rect x="984" y="18" width="178" height="56" fill="#A35E47"/>
+    <text x="984" y="96" font-size="13" font-weight="600" fill="#8F4E39">Brick</text>
+    <text x="984" y="114" font-size="12" fill="#8F4E39" fill-opacity="0.8">#A35E47</text>
+    <text x="984" y="134" font-size="11" fill="#8F4E39" fill-opacity="0.8">RESERVED · verified</text>
+  </g>
+</svg>

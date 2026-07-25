@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 232" width="1100" height="232" role="img" aria-labelledby="ct">
+  <title id="ct">Trace confidence encoded as line type: solid for high, dashed for review, tight dash for low</title>
+
+  <defs>
+    <pattern id="q1" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#9C9A9A" stroke-width="1" stroke-opacity="0.5"/>
+    </pattern>
+    <pattern id="q2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#9C9A9A" stroke-width="1" stroke-opacity="0.7"/>
+    </pattern>
+  </defs>
+
+  <rect width="1100" height="232" fill="#FBF5EA"/>
+  <rect x="0.5" y="0.5" width="1099" height="231" fill="none" stroke="#464646" stroke-opacity="0.14"/>
+
+  <g font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace">
+    <!-- HIGH -->
+    <polygon points="52,36 262,34 264,126 50,128" fill="none" stroke="#464646" stroke-opacity="0.7" stroke-width="1.5"/>
+    <text x="157" y="88" font-size="12" fill="#464646" fill-opacity="0.5" text-anchor="middle">04</text>
+    <text x="50" y="164" font-size="14" font-weight="600" fill="#464646">Solid · high</text>
+    <text x="50" y="186" font-size="12" fill="#8F4E39">confidence ≥ 0.90</text>
+    <text x="50" y="208" font-size="11" fill="#464646" fill-opacity="0.65">Clean trace. Auto-accepted.</text>
+
+    <!-- REVIEW -->
+    <polygon points="442,34 652,36 654,128 440,126" fill="url(#q1)" stroke="#464646" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="9 6"/>
+    <text x="547" y="88" font-size="12" fill="#464646" fill-opacity="0.5" text-anchor="middle">07</text>
+    <text x="440" y="164" font-size="14" font-weight="600" fill="#464646">Dashed + hatch · review</text>
+    <text x="440" y="186" font-size="12" fill="#8F4E39">0.60 – 0.89</text>
+    <text x="440" y="208" font-size="11" fill="#464646" fill-opacity="0.65">A draughtsman's query. Blocks publish.</text>
+
+    <!-- LOW -->
+    <polygon points="832,36 1042,35 1044,127 830,126" fill="url(#q2)" stroke="#464646" stroke-opacity="0.85" stroke-width="1.7" stroke-dasharray="3 3"/>
+    <text x="937" y="88" font-size="12" fill="#464646" fill-opacity="0.6" text-anchor="middle">12</text>
+    <text x="830" y="164" font-size="14" font-weight="600" fill="#464646">Tight dash + hatch · low</text>
+    <text x="830" y="186" font-size="12" fill="#8F4E39">&lt; 0.60</text>
+    <text x="830" y="208" font-size="11" fill="#464646" fill-opacity="0.65">Unreliable. Must be redrawn by hand.</text>
+  </g>
+
+</svg>
