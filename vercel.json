@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "comment": "SPA fallback. React Router owns /plots, /plots/:id, /relator/* and /agents/:id — none of which exist as files. Vercel serves real static files (assets, favicon) first and only falls through to index.html for unmatched paths, so deep links and refreshes resolve instead of 404ing.",
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
