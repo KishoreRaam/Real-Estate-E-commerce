@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Kaani — "Ground Truth" token system
+ * Palette: Urban loft, light-first (+ one warm ground from Quiet luxury)
+ *
+ *   Paper      #FBF5EA  page ground — light, calm, never dark
+ *   Champagne  #F7E6CA  warm panel / "record" ground (Quiet luxury)
+ *   Concrete   #9C9A9A  rules, secondary linework, pending state (Urban loft)
+ *   Graphite   #464646  body text, survey linework (Urban loft)
+ *   Ink        #000000  headings only, used sparingly (Urban loft)
+ *   Brick      #A35E47  RESERVED — verified state, the one accent (Urban loft)
+ *
+ * Dark values are ink and linework, never grounds: they blend into the page
+ * instead of dominating it. Two grounds still carry meaning —
+ *   Paper = the drawing surface, Champagne = the record.
+ *
+ * Type: Catamaran (display) / Hind Madurai (body) / IBM Plex Mono (facts)
+ * ------------------------------------------------------------------ */
+
+@theme {
+  --color-paper: #fbf5ea;
+  --color-paper-2: #f4ecdd; /* barely-recessed panel on paper */
+  --color-champagne: #f7e6ca;
+  --color-concrete: #9c9a9a;
+  --color-concrete-lt: #c3c0bb; /* faint rules that still read on paper */
+  --color-graphite: #464646;
+  --color-ink: #000000;
+  --color-brick: #a35e47;
+  --color-brick-lit: #8f4e39; /* brick at hover / peak, darker for contrast */
+
+  /* Terrain — derived for the satellite view. Roads use Concrete and roofs use
+   * Brick verbatim; only vegetation and soil are added, muted to sit beside
+   * them rather than shout. */
+  --terrain-soil: #d8c6ab;
+  --terrain-soil-dk: #c2ac8d;
+  --terrain-grass: #9aa383;
+  --terrain-scrub: #8b9673;
+  --terrain-tree: #6f7d59;
+  --terrain-tree-dk: #576344;
+  --terrain-road: #9c9a9a;
+  --terrain-road-dk: #86847f;
+  --terrain-roof: #a35e47;
+  --terrain-roof-dk: #8a4d38;
+  --terrain-shadow: rgba(70, 70, 70, 0.22);
+
+  --font-display: "Catamaran", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Hind Madurai", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Consolas", monospace;
+
+  --tracking-survey: 0.24em; /* wide, drawing-annotation tracking for eyebrows */
+}
+
+/* Base ---------------------------------------------------------------- */
+
+/* Default border tint. MUST live in @layer base — unlayered CSS outranks
+ * Tailwind's layered utilities, which would make every border-<color> class
+ * (border-brick, border-concrete, …) silently lose to this reset. */
+@layer base {
+  * {
+    border-color: color-mix(in srgb, var(--color-graphite) 16%, transparent);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-graphite);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-brick) 30%, transparent);
+  color: var(--color-ink);
+}
+
+/* Keyboard focus — a surveyor's crosshair-tick ring, never removed ---- */
+:focus-visible {
+  outline: 2px solid var(--color-brick);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Utility: measured-fact label */
+.u-fact {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0.02em;
+}
+
+/* Utility: survey eyebrow */
+.u-eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-survey);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+/* Faint drafting grid, drawn in graphite on the paper ground ---------- */
+.bg-survey-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-graphite) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-graphite) 7%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Typing caret for the reveal's dimension callout */
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.5ch;
+  height: 1em;
+  margin-left: 0.1ch;
+  translate: 0 0.12em;
+  background: var(--color-brick);
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+/* Barely-perceptible drift for idle survey linework ------------------- */
+@keyframes survey-drift {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(0.6px, -0.5px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+.survey-drift {
+  animation: survey-drift 9s ease-in-out infinite;
+}
+
+/* Vegetation is deliberately STILL. Swaying canopies at this scale read as
+ * micro-organisms rather than trees — the only thing that should move on the
+ * site is traffic, because that is what actually moves on a site. ------ */
+
+/* Traffic along the internal road. Translation only, so each vehicle stays on
+ * the compositor. Distances are SVG user units (viewBox is 960 wide). */
+@keyframes drive-right {
+  from { transform: translateX(-70px); }
+  to   { transform: translateX(1030px); }
+}
+@keyframes drive-left {
+  from { transform: translateX(1030px); }
+  to   { transform: translateX(-70px); }
+}
+.drive-r,
+.drive-l {
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* held off-screen until its delay elapses, so nothing starts mid-road */
+  animation-fill-mode: backwards;
+}
+.drive-r { animation-name: drive-right; }
+.drive-l { animation-name: drive-left; }
+
+/* A cloud shadow drifting over the site — the only ambient motion. */
+@keyframes cloud-drift {
+  0%   { transform: translateX(-22%); }
+  100% { transform: translateX(122%); }
+}
+.cloud-shadow {
+  animation: cloud-drift 38s linear infinite;
+}
+
+/* Reduced motion: cut drift, sway, reveal, smooth-scroll -------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .survey-drift,
+  .cloud-shadow,
+  .drive-r,
+  .drive-l { animation: none; }
+  /* park the traffic off the road rather than freezing it mid-carriageway */
+  .drive-r, .drive-l { display: none; }
+  .caret::after { animation: none; opacity: 0; }
+}
