@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { layout as defaultLayout, pointsToString } from "./plotData";
 import SatelliteTerrain from "./SatelliteTerrain";
+import RealSatelliteBackdrop from "./RealSatelliteBackdrop";
 
 /* ------------------------------------------------------------------ *
  * PlotOverlay — the one plot-map component, four interaction modes.
@@ -522,13 +523,18 @@ export default function PlotOverlay({
           )}
         </defs>
 
-        {/* aerial ground: soil, planting, roads, rooftops */}
+        {/* aerial ground: a real photo where the layout has one, else the
+            procedural terrain read */}
         {showTerrain && (
-          <SatelliteTerrain
-            layout={layout}
-            detail={detail}
-            animate={!reduce && detail === "full"}
-          />
+          layout.satelliteImage ? (
+            <RealSatelliteBackdrop layout={layout} />
+          ) : (
+            <SatelliteTerrain
+              layout={layout}
+              detail={detail}
+              animate={!reduce && detail === "full"}
+            />
+          )
         )}
 
         {/* the uploaded sheet, sitting under the trace */}

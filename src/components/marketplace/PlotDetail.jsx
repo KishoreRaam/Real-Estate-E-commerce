@@ -6,7 +6,7 @@ import PlotOverlay from "../shared/PlotOverlay";
 import PlotRecordCard from "../shared/PlotRecordCard";
 import Button from "../shared/Button";
 import VerifiedStamp from "../shared/VerifiedStamp";
-import { layout, layouts } from "../shared/plotData";
+import { layout, layouts, fullLayouts } from "../shared/plotData";
 import { publicRelators } from "../relator/relatorData";
 
 export default function PlotDetail() {
@@ -15,14 +15,16 @@ export default function PlotDetail() {
   const listedBy =
     publicRelators.find((r) => r.listingIds.includes(meta.id)) ?? publicRelators[0];
 
-  // Geometry is the same placeholder sheet for every layout until the pipeline
-  // lands; the record above it reflects the layout actually requested.
-  const [selectedId, setSelectedId] = useState(layout.featuredId);
+  // Geometry falls back to the shared placeholder sheet until a layout has
+  // its own real trace registered in `fullLayouts`.
+  const activeLayout = fullLayouts[meta.id] ?? layout;
+
+  const [selectedId, setSelectedId] = useState(activeLayout.featuredId);
   const [hoveredId, setHoveredId] = useState(null);
 
   const selected = useMemo(
-    () => layout.plots.find((p) => p.id === selectedId) ?? null,
-    [selectedId],
+    () => activeLayout.plots.find((p) => p.id === selectedId) ?? null,
+    [selectedId, activeLayout],
   );
 
   return (
@@ -57,7 +59,7 @@ export default function PlotDetail() {
               </div>
               <div>
                 <div className="u-eyebrow text-graphite/84" style={{ fontSize: "0.54rem" }}>Approved</div>
-                <div className="u-fact text-sm text-graphite">{layout.approvedOn}</div>
+                <div className="u-fact text-sm text-graphite">{activeLayout.approvedOn}</div>
               </div>
               {meta.plotsVerified === meta.plotsTotal ? (
                 <VerifiedStamp status="verified" />
@@ -81,13 +83,14 @@ export default function PlotDetail() {
                 <p className="u-eyebrow text-graphite/84" style={{ fontSize: "0.58rem" }}>
                   <span className="text-brick-lit">◈</span> Click a plot to open its record
                 </p>
-                <p className="u-fact text-[0.66rem] text-graphite/84">Scale {layout.scale}</p>
+                <p className="u-fact text-[0.66rem] text-graphite/84">Scale {activeLayout.scale}</p>
               </div>
               <div
                 className="mt-3 border border-graphite/15 p-2"
                 style={{ borderRadius: "3px" }}
               >
                 <PlotOverlay
+                  layout={activeLayout}
                   mode="detail"
                   selectedId={selectedId}
                   hoveredId={hoveredId}
@@ -119,7 +122,7 @@ export default function PlotDetail() {
 
             {/* record + plot list */}
             <div className="flex flex-col gap-5">
-              <PlotRecordCard plot={selected} layout={layout} />
+              <PlotRecordCard plot={selected} layout={activeLayout} />
 
               {selected && (
                 <div className="flex flex-col gap-2.5">
@@ -142,10 +145,10 @@ export default function PlotDetail() {
               {/* plot list — mirrors the map selection both ways */}
               <div className="border border-graphite/15" style={{ borderRadius: "3px" }}>
                 <p className="border-b border-graphite/12 px-4 py-2.5 u-eyebrow text-graphite/84" style={{ fontSize: "0.56rem" }}>
-                  All plots · {layout.plots.length}
+                  All plots · {activeLayout.plots.length}
                 </p>
                 <ul className="max-h-[320px] overflow-y-auto">
-                  {layout.plots.map((p) => {
+                  {activeLayout.plots.map((p) => {
                     const active = p.id === selectedId;
                     return (
                       <li key={p.id}>

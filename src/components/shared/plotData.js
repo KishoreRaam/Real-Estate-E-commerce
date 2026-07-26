@@ -131,6 +131,131 @@ export function pointsToString(points) {
   return points.map(([x, y]) => `${x},${y}`).join(" ");
 }
 
+/* ------------------------------------------------------------------ *
+ * REAL PHOTO LAYOUT — vadasithur-plots-01.jpg is an actual aerial photo
+ * (crop of "Vadasithur Village.jpg", Wikimedia Commons, CC BY-SA 4.0,
+ * © Keyantkarthi — https://commons.wikimedia.org/wiki/File:Vadasithur_Village.jpg),
+ * not a procedural drawing. The five plot boundaries below are hand-traced
+ * against that photo's own 480x300 pixel grid, so they land on real field
+ * edges — but they're still an approximate demo trace, not a licensed
+ * survey; areas/prices/survey numbers are invented, same as the rest of
+ * this file's mock data.
+ * ------------------------------------------------------------------ */
+const realLayout = {
+  id: "kovai-vs-04",
+  name: "Vadasithur Fields",
+  place: "Vadasithur, Coimbatore",
+  dtcp: "DTCP/LP/0399/2024",
+  approvedOn: "14 Mar 2024",
+  scale: '1" = 25 ft',
+  viewBox: "0 0 480 300",
+  width: 480,
+  height: 300,
+  satelliteImage: "/satellite/vadasithur-plots-01.jpg",
+  north: { x: 452, y: 280, r: 12 },
+  road: { label: "ACCESS TRACK", x: 10, y: 230, w: 340, h: 16 },
+  osr: {
+    label: "OSR · COCONUT RESERVE",
+    points: [
+      [368, 0],
+      [480, 0],
+      [480, 300],
+      [368, 300],
+    ],
+  },
+  plots: [
+    {
+      id: "p-1",
+      no: 1,
+      points: [[122, 42], [238, 40], [234, 118], [120, 122]],
+      centroid: [179, 81],
+      areaSqft: 2800,
+      dimensions: "56 × 50 ft",
+      facing: "East",
+      roadFt: 20,
+      survey: "212/1",
+      status: "pending",
+      pricePerSqft: 1850,
+      guidePrice: "₹51.8 L",
+      confidence: 0.62,
+      tier: confidenceTier(0.62),
+    },
+    {
+      id: "p-2",
+      no: 2,
+      points: [[250, 18], [363, 14], [365, 118], [254, 124]],
+      centroid: [308, 69],
+      areaSqft: 3200,
+      dimensions: "58 × 55 ft",
+      facing: "East",
+      roadFt: 20,
+      survey: "212/2",
+      status: "verified",
+      pricePerSqft: 1900,
+      guidePrice: "₹60.8 L",
+      confidence: 0.93,
+      tier: confidenceTier(0.93),
+    },
+    {
+      id: "p-3",
+      no: 3,
+      points: [[160, 86], [350, 82], [326, 196], [152, 198]],
+      centroid: [247, 141],
+      areaSqft: 4600,
+      dimensions: "76 × 60 ft",
+      facing: "North",
+      roadFt: 18,
+      survey: "213/1",
+      status: "verified",
+      pricePerSqft: 1750,
+      guidePrice: "₹80.5 L",
+      confidence: 0.97,
+      tier: confidenceTier(0.97),
+    },
+    {
+      id: "p-4",
+      no: 4,
+      points: [[10, 84], [150, 80], [148, 163], [8, 168]],
+      centroid: [79, 124],
+      areaSqft: 2500,
+      dimensions: "50 × 50 ft",
+      facing: "West",
+      roadFt: 18,
+      survey: "213/2",
+      status: "pending",
+      pricePerSqft: 1700,
+      guidePrice: "₹42.5 L",
+      confidence: 0.64,
+      tier: confidenceTier(0.64),
+    },
+    {
+      id: "p-5",
+      no: 5,
+      points: [[165, 198], [310, 193], [295, 248], [155, 250]],
+      centroid: [231, 222],
+      areaSqft: 1900,
+      dimensions: "44 × 43 ft",
+      facing: "South",
+      roadFt: 18,
+      survey: "213/3",
+      status: "verified",
+      pricePerSqft: 1800,
+      guidePrice: "₹34.2 L",
+      confidence: 0.81,
+      tier: confidenceTier(0.81),
+    },
+  ],
+  featuredId: "p-3",
+};
+
+// Lookup for full geometry by layout id. Entries without full geometry yet
+// (summary-only rows in `layouts` below) are absent here — callers fall back
+// to the generic `layout` mock sheet until their real data lands.
+export const fullLayouts = {
+  [layout.id]: layout,
+  [realLayout.id]: realLayout,
+};
+
 // A handful of layouts for the marketplace browse grid (Phase 3 reuses these).
 export const layouts = [
   {
@@ -161,6 +286,16 @@ export const layouts = [
     plotsTotal: 18,
     plotsVerified: 12,
     fromPricePerSqft: 1950,
+    status: "partial",
+  },
+  {
+    id: "kovai-vs-04",
+    name: "Vadasithur Fields",
+    place: "Vadasithur, Coimbatore",
+    dtcp: "DTCP/LP/0399/2024",
+    plotsTotal: 5,
+    plotsVerified: 3,
+    fromPricePerSqft: 1700,
     status: "partial",
   },
 ];

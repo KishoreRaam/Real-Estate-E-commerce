@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import PlotOverlay from "../shared/PlotOverlay";
-import { layout as sampleLayout } from "../shared/plotData";
+import { layout, fullLayouts } from "../shared/plotData";
 
 /* Browse card. The thumbnail is the SAME PlotOverlay in "browse" mode —
  * non-interactive, no per-plot hover, so the card itself is the hit target. */
 export default function LayoutCard({ item }) {
   const allVerified = item.plotsVerified === item.plotsTotal;
+  const cardLayout = fullLayouts[item.id] ?? layout;
 
   return (
     <Link
@@ -15,9 +16,9 @@ export default function LayoutCard({ item }) {
     >
       {/* sheet thumbnail */}
       <div className="relative overflow-hidden border-b border-graphite/12 bg-paper px-3 pb-1 pt-3">
-        <PlotOverlay layout={sampleLayout} mode="browse" showDimensionLeader={false} />
+        <PlotOverlay layout={cardLayout} mode="browse" showDimensionLeader={false} />
         <span className="pointer-events-none absolute right-3 top-3 u-fact text-[0.6rem] text-graphite/84">
-          {sampleLayout.scale}
+          {cardLayout.scale}
         </span>
       </div>
 
