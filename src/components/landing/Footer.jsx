@@ -60,13 +60,30 @@ export default function Footer() {
 
       {/* coordinate baseline */}
       <div className="border-t border-graphite/12">
-        <div className="mx-auto flex max-w-[1180px] flex-col gap-2 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <span className="u-fact text-[0.68rem] text-graphite/84">
-            11.0168° N · 76.9558° E — Coimbatore, Tamil Nadu
-          </span>
-          <span className="u-fact text-[0.68rem] text-graphite/84">
-            © {new Date().getFullYear()} Kaani · Plot data pending survey pipeline
-          </span>
+        <div className="mx-auto flex max-w-[1180px] flex-col gap-4 px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <div className="flex flex-col gap-2">
+            <span className="u-fact text-[0.68rem] text-graphite/84">
+              11.0168° N · 76.9558° E — Coimbatore, Tamil Nadu
+            </span>
+            <span className="u-fact text-[0.68rem] text-graphite/84">
+              © {new Date().getFullYear()} Kaani · Plot data pending survey pipeline
+            </span>
+          </div>
+          <div className="flex items-center">
+            <a 
+              href="https://www.lifeofraam.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="u-eyebrow inline-flex items-center gap-2 rounded-full border border-brick/20 bg-brick/5 px-3 py-1.5 text-brick transition-colors hover:bg-brick/10" 
+              style={{ fontSize: "0.62rem" }}
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brick opacity-75"></span>
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brick"></span>
+              </span>
+              Created By Raam
+            </a>
+          </div>
         </div>
       </div>
     </footer>
