@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Wordmark from "../shared/Wordmark";
 import Button from "../shared/Button";
 import useAuth from "../shared/useAuth";
+import ScrollProgress from "./ScrollProgress";
 
 /* Buyer-side links. Hash targets stay as plain anchors so they scroll; real
  * paths use Link so navigation stays client-side instead of reloading. */
@@ -171,6 +172,8 @@ export default function Nav() {
           </Button>
         </div>
       )}
+
+      <ScrollProgress />
     </header>
   );
 }

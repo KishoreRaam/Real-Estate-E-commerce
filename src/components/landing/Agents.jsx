@@ -16,7 +16,7 @@ function initials(name) {
 
 export default function Agents() {
   return (
-    <section id="agents" className="relative scroll-mt-20 bg-champagne bg-survey-grid text-ink">
+    <section id="agents" className="relative scroll-mt-24 bg-champagne bg-survey-grid text-ink">
       {/* blend: eases in from the paper section above instead of cutting hard */}
       <div
         aria-hidden="true"

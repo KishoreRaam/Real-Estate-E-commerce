@@ -24,7 +24,7 @@ export default function RoleToggle({ role, onChange }) {
             aria-checked={active}
             onClick={() => onChange(r.id)}
             className={`u-fact px-4 py-2 text-[0.78rem] uppercase transition-colors ${
-              active ? "bg-graphite text-paper" : "text-graphite/70 hover:text-graphite"
+              active ? "bg-graphite text-paper" : "text-graphite/85 hover:text-graphite"
             }`}
             style={{ borderRadius: "1px", letterSpacing: "0.08em" }}
           >

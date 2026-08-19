@@ -33,7 +33,7 @@ export default function HowWeVerify() {
   const markerTop = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="verify" className="relative scroll-mt-20 bg-paper bg-survey-grid">
+    <section id="verify" className="relative scroll-mt-24 bg-paper bg-survey-grid">
       {/* blend: eases in from the champagne section above instead of cutting hard */}
       <div
         aria-hidden="true"
