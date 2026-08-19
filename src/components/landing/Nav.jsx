@@ -30,7 +30,7 @@ function NavItem({ item, className, onClick }) {
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const { session, role, signOut } = useAuth();
-  const deskLink = "u-fact text-[0.78rem] text-graphite/80 transition-colors hover:text-graphite";
+  const deskLink = "u-fact text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite";
 
   return (
     <header className="sticky top-0 z-40 border-b border-graphite/12 bg-paper/85 backdrop-blur-md">
@@ -62,7 +62,7 @@ export default function Nav() {
           <span aria-hidden="true" className="h-4 w-px bg-graphite/25" />
           <Link
             to="/relator"
-            className="u-fact text-[0.78rem] text-graphite/80 transition-colors hover:text-graphite"
+            className="u-fact text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite"
           >
             {role === "relator" ? "Go to dashboard" : "List your layout"}
           </Link>
@@ -116,7 +116,7 @@ export default function Nav() {
                 <NavItem
                   item={l}
                   onClick={() => setOpen(false)}
-                  className="block py-2.5 font-body text-lg text-graphite/80"
+                  className="block py-2.5 font-body text-lg text-graphite/88"
                 />
               </li>
             ))}
@@ -126,7 +126,7 @@ export default function Nav() {
             <Link
               to="/relator"
               onClick={() => setOpen(false)}
-              className="block py-2.5 font-body text-lg text-graphite/80"
+              className="block py-2.5 font-body text-lg text-graphite/88"
             >
               {role === "relator" ? "Go to dashboard" : "List your layout"}
             </Link>
@@ -151,7 +151,7 @@ export default function Nav() {
                 <Link
                   to="/login"
                   onClick={() => setOpen(false)}
-                  className="block py-2.5 font-body text-lg text-graphite/80"
+                  className="block py-2.5 font-body text-lg text-graphite/88"
                 >
                   Sign in
                 </Link>

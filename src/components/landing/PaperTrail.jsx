@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 /* Light "record" ground. brick = verified stays true here too, but on chalk it
  * has to be a solid fill (brick text on light gray fails contrast), so verified
@@ -16,7 +17,7 @@ function StatusChip({ kind, label }) {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 border border-concrete/50 px-2 py-1 u-fact text-[0.62rem] uppercase text-graphite/84" style={{ borderRadius: "2px", letterSpacing: "0.12em" }}>
+    <span className="inline-flex items-center gap-1.5 border border-concrete/60 px-2 py-1 u-fact text-[0.62rem] uppercase text-graphite/90" style={{ borderRadius: "2px", letterSpacing: "0.12em" }}>
       {label}
     </span>
   );
@@ -65,25 +66,65 @@ const RECORDS = [
 ];
 
 export default function PaperTrail() {
+  const trackRef = useRef(null);
+  // driven by real scroll position through the record row, not a viewport trigger —
+  // the thread only advances as far as the user has actually scrolled.
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ["start 0.85", "end 0.55"],
+  });
+  const markerLeft = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
-    <section className="bg-champagne text-ink">
-      <div className="mx-auto max-w-[1180px] px-5 py-20 sm:px-8 lg:py-28">
+    <section className="relative bg-champagne bg-survey-grid text-ink">
+      {/* blend: eases in from the paper section above instead of cutting hard */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 sm:h-32"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--color-paper) 0%, color-mix(in srgb, var(--color-paper) 45%, transparent) 55%, transparent 100%)",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto max-w-[1180px] px-5 py-20 sm:px-8 lg:py-28">
         <div className="max-w-2xl">
-          <p className="u-eyebrow text-graphite/84">Provenance</p>
+          <p className="u-eyebrow text-graphite/88">Provenance</p>
           <h2
             className="mt-4 font-display font-extrabold text-ink"
             style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)", lineHeight: 1.02, letterSpacing: "-0.02em" }}
           >
             Every plot carries its paper trail.
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-ink/78">
+          <p className="mt-5 text-lg leading-relaxed text-ink/85">
             Nothing here is a claim you have to take on faith. Each plot links the document
             behind it, the record it was checked against, and the date someone confirmed it —
             in the open, next to the map.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-px overflow-hidden border border-ink/12 bg-paper/12 sm:grid-cols-2 lg:grid-cols-4" style={{ borderRadius: "4px" }}>
+        <div ref={trackRef} className="relative mt-14">
+          {/* thread: the record trail being read out, tied to the user's own scroll */}
+          <div aria-hidden="true" className="relative mb-3 h-px bg-ink/15">
+            <motion.div
+              aria-hidden="true"
+              className="absolute inset-y-0 left-0 origin-left bg-brick"
+              style={{ scaleX: scrollYProgress }}
+            />
+            <motion.span
+              aria-hidden="true"
+              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ left: markerLeft }}
+            >
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brick text-champagne shadow-[0_0_0_5px_var(--color-champagne)]">
+                <svg width="8" height="8" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                  <path d="M1 5 H9 M5 1 L9 5 L5 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </motion.span>
+          </div>
+
+          <div className="grid gap-px overflow-hidden border border-ink/16 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.35)]" style={{ borderRadius: "4px" }}>
           {RECORDS.map((r, i) => (
             <motion.div
               key={r.title}
@@ -91,23 +132,25 @@ export default function PaperTrail() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="flex flex-col gap-4 bg-paper p-6"
+              className="group relative flex flex-col gap-4 bg-paper p-6 transition-colors hover:bg-paper-2"
             >
+              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-brick transition-transform duration-300 group-hover:scale-x-100" />
               <div className="flex items-center justify-between">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-ink/75">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-ink/82">
                   {ICONS[r.icon]}
                 </svg>
-                <span className="u-fact text-[0.62rem] text-ink/65">
+                <span className="u-fact text-[0.62rem] text-ink/72">
                   {String(i + 1).padStart(2, "0")}/04
                 </span>
               </div>
               <h3 className="font-display text-lg font-bold text-ink">{r.title}</h3>
-              <p className="text-[0.95rem] leading-relaxed text-ink/74">{r.body}</p>
+              <p className="text-[0.95rem] leading-relaxed text-ink/82">{r.body}</p>
               <div className="mt-auto pt-1">
                 <StatusChip kind={r.chip.kind} label={r.chip.label} />
               </div>
             </motion.div>
           ))}
+          </div>
         </div>
       </div>
     </section>

@@ -10,9 +10,19 @@ const COLS = [
 
 export default function Footer() {
   return (
-    <footer className="bg-paper">
+    <footer className="relative bg-paper">
+      {/* blend: eases in from the champagne section above instead of cutting hard */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 sm:h-32"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--color-champagne) 0%, color-mix(in srgb, var(--color-champagne) 45%, transparent) 55%, transparent 100%)",
+        }}
+      />
+
       {/* closing CTA */}
-      <div className="border-t border-graphite/12">
+      <div className="relative z-10 border-t border-graphite/12">
         <div className="mx-auto flex max-w-[1180px] flex-col items-start gap-6 px-5 py-16 sm:px-8 md:flex-row md:items-center md:justify-between">
           <h2
             className="font-display font-extrabold text-graphite"
@@ -42,11 +52,11 @@ export default function Footer() {
                 {col.links.map(([label, href]) => (
                   <li key={label}>
                     {href.startsWith("/") ? (
-                      <Link to={href} className="text-sm text-graphite/80 transition-colors hover:text-graphite">
+                      <Link to={href} className="text-sm text-graphite/85 transition-colors hover:text-graphite">
                         {label}
                       </Link>
                     ) : (
-                      <a href={href} className="text-sm text-graphite/80 transition-colors hover:text-graphite">
+                      <a href={href} className="text-sm text-graphite/85 transition-colors hover:text-graphite">
                         {label}
                       </a>
                     )}
