@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Wordmark from "../shared/Wordmark";
 import Button from "../shared/Button";
+import useAuth from "../shared/useAuth";
 
 /* Same chassis as the buyer nav — tick ruler, wordmark, mono links — with a
  * workspace tag so a relator always knows which side of Kaani they're on. */
@@ -14,6 +15,13 @@ const LINKS = [
 
 export default function RelatorNav() {
   const [open, setOpen] = useState(false);
+  const { session, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/login?role=relator");
+  };
 
   const linkClass = ({ isActive }) =>
     "u-fact text-[0.78rem] transition-colors " +
@@ -58,6 +66,12 @@ export default function RelatorNav() {
               </li>
             ))}
           </ul>
+          {session && (
+            <span className="u-fact text-[0.78rem] text-graphite/84">Signed in as {session.name}</span>
+          )}
+          <Button variant="link" onClick={handleSignOut}>
+            Sign out
+          </Button>
           <Button as={Link} to="/relator/upload" variant="ghost" arrow className="!px-4 !py-2.5">
             Upload layout
           </Button>
@@ -101,6 +115,20 @@ export default function RelatorNav() {
               </li>
             ))}
           </ul>
+          {session && (
+            <div className="mt-3 flex items-center justify-between border-t border-graphite/12 pt-3">
+              <span className="u-fact text-[0.78rem] text-graphite/84">Signed in as {session.name}</span>
+              <Button
+                variant="link"
+                onClick={() => {
+                  setOpen(false);
+                  handleSignOut();
+                }}
+              >
+                Sign out
+              </Button>
+            </div>
+          )}
           <Button as={Link} to="/relator/upload" variant="primary" arrow className="mt-3 w-full">
             Upload layout
           </Button>
