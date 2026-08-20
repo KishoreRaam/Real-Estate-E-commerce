@@ -44,7 +44,7 @@ export default function Nav() {
             "repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-graphite) 22%, transparent) 0 1px, transparent 1px 24px)",
         }}
       />
-      <nav className="mx-auto flex max-w-[1180px] items-center justify-between px-5 py-3.5 sm:px-8">
+      <nav className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-3.5 sm:px-8">
         <Link to="/" className="rounded-sm" aria-label="Kaani home">
           <Wordmark />
         </Link>

@@ -27,7 +27,7 @@ export default function Agents() {
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-[1180px] px-5 py-20 sm:px-8 lg:py-28">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:py-28">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <p className="u-eyebrow text-graphite/88">Agents</p>

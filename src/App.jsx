@@ -11,10 +11,12 @@ import PublicProfile from "./components/relator/PublicProfile";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 import RequireRelatorAuth from "./components/shared/RequireRelatorAuth";
+import ScrollToTop from "./components/shared/ScrollToTop";
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* buyer */}
         <Route path="/" element={<Landing />} />

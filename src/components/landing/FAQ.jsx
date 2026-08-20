@@ -81,7 +81,7 @@ export default function FAQ() {
 
   return (
     <section id="faq" className="relative scroll-mt-24 bg-champagne bg-survey-grid text-ink">
-      <div className="relative z-10 mx-auto max-w-[1180px] px-5 py-20 sm:px-8 lg:py-28">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:py-28">
         <div className="max-w-2xl">
           <p className="u-eyebrow text-graphite/88">Questions</p>
           <h2

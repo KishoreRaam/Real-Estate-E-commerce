@@ -44,7 +44,7 @@ export default function HowWeVerify() {
         }}
       />
 
-      <div className="relative z-10 mx-auto max-w-[1180px] px-5 py-20 sm:px-8 lg:py-28">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:py-28">
         <div className="lg:grid lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div className="max-w-xl lg:sticky lg:top-28">
             <p className="u-eyebrow text-brick-lit">How we verify</p>

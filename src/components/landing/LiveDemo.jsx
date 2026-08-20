@@ -22,7 +22,7 @@ export default function LiveDemo() {
 
   return (
     <section id="live-demo" className="relative scroll-mt-24 bg-paper bg-survey-grid">
-      <div className="relative z-10 mx-auto max-w-[1180px] px-5 py-20 sm:px-8 lg:py-28">
+      <div className="relative z-10 mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:py-28">
         <div className="max-w-2xl">
           <p className="u-eyebrow text-brick-lit">Try it</p>
           <h2

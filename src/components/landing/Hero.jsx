@@ -30,7 +30,7 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-paper bg-survey-grid">
-      <div className="mx-auto grid max-w-[1180px] items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:py-20">
+      <div className="mx-auto grid max-w-[1440px] items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:py-20">
         {/* ---- copy ---- */}
         <div className="max-w-xl">
           <motion.p {...rise(0)} className="u-eyebrow text-brick-lit">

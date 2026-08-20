@@ -12,17 +12,25 @@ import Footer from "./Footer";
 // into its own chunk so the hero paints before this ships to the client.
 const LiveDemo = lazy(() => import("./LiveDemo"));
 
-/* On very wide screens, the centered 1180px column leaves the flanks bare.
- * Rather than leave them empty, they carry the same tick-ruler language used
- * at the top of Nav — the page reads as one continuous drafting sheet. */
+/* On wide screens, the centered 1440px column leaves the flanks bare. Every
+ * section already paints its own bg-survey-grid edge-to-edge (sections have
+ * no max-width of their own — only their inner content div does), so the
+ * gutter already carries the page's texture; drawing a second, differently
+ * spaced grid on top of it was what created a visible seam. All this needs
+ * to add is the ruled "sheet edge" line marking where the content column
+ * starts — one thin rule, not a competing pattern — so it blends into
+ * whatever section/background is currently underneath instead of fighting
+ * it. Width tracks the actual leftover gutter (100vw minus the content
+ * column, halved) so the line always lands exactly at the column's edge. */
 function EdgeRuler({ side }) {
+  const edge = side === "left" ? "borderRight" : "borderLeft";
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-y-0 ${side}-0 z-30 hidden w-3 2xl:block`}
+      className={`pointer-events-none fixed inset-y-0 ${side}-0 z-30 hidden md:block`}
       style={{
-        backgroundImage:
-          "repeating-linear-gradient(180deg, color-mix(in srgb, var(--color-graphite) 22%, transparent) 0 1px, transparent 1px 24px)",
+        width: "max(0px, calc((100vw - 1440px) / 2))",
+        [edge]: "1px solid color-mix(in srgb, var(--color-graphite) 14%, transparent)",
       }}
     />
   );
@@ -33,7 +41,7 @@ function EdgeRuler({ side }) {
 function LiveDemoFallback() {
   return (
     <section className="relative bg-paper bg-survey-grid">
-      <div className="mx-auto flex min-h-[520px] max-w-[1180px] items-center justify-center px-5 py-20 sm:px-8">
+      <div className="mx-auto flex min-h-[520px] max-w-[1440px] items-center justify-center px-5 py-20 sm:px-8">
         <p className="u-fact text-[0.72rem] text-graphite/84">Loading the live plot map…</p>
       </div>
     </section>
