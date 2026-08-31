@@ -124,6 +124,17 @@ export default function PlotDetail() {
             <div className="flex flex-col gap-5">
               <PlotRecordCard plot={selected} layout={activeLayout} />
 
+              <Link
+                to={`/plots/${meta.id}/history`}
+                className="flex items-center justify-between gap-3 border border-graphite/15 px-4 py-3 transition-colors hover:border-graphite/35"
+                style={{ borderRadius: "3px" }}
+              >
+                <span className="text-sm text-graphite">Read this layout&rsquo;s document history</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true" className="shrink-0 text-graphite/84">
+                  <path d="M1 5 H12 M8 1 L12 5 L8 9" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+
               {selected && (
                 <div className="flex flex-col gap-2.5">
                   <Button as="a" href="#enquire" arrow>

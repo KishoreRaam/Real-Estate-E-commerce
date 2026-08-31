@@ -4,46 +4,8 @@ import { useNavigate } from "react-router-dom";
 import PlotOverlay from "../shared/PlotOverlay";
 import PlotTitleBlock from "../shared/PlotTitleBlock";
 import Button from "../shared/Button";
+import CoordFrame from "../shared/CoordFrame";
 import { layout } from "../shared/plotData";
-
-function CoordFrame({ children }) {
-  // Draughting frame: E ruler on top, N ruler on the left — the sheet Kaani
-  // draws on. Decorative, so hidden from assistive tech.
-  const ticks = [0, 100, 200, 300, 400];
-  return (
-    <div className="relative">
-      <div aria-hidden="true" className="mb-1 flex justify-between px-6 u-fact text-[0.58rem] text-graphite/84">
-        {ticks.map((t) => (
-          <span key={t}>E:{t}</span>
-        ))}
-      </div>
-      <div className="flex">
-        <div aria-hidden="true" className="mr-1 flex flex-col justify-between py-6 u-fact text-[0.58rem] text-graphite/84">
-          {ticks.map((t) => (
-            <span key={t}>N:{t}</span>
-          ))}
-        </div>
-        <div className="relative flex-1 border border-graphite/15" style={{ borderRadius: "3px" }}>
-          {/* corner crosshair ticks */}
-          {["-top-px -left-px", "-top-px -right-px", "-bottom-px -left-px", "-bottom-px -right-px"].map((pos) => (
-            <span
-              key={pos}
-              aria-hidden="true"
-              className={`absolute ${pos} h-2.5 w-2.5 border-graphite/40`}
-              style={{
-                borderTopWidth: pos.includes("top") ? 1 : 0,
-                borderBottomWidth: pos.includes("bottom") ? 1 : 0,
-                borderLeftWidth: pos.includes("left") ? 1 : 0,
-                borderRightWidth: pos.includes("right") ? 1 : 0,
-              }}
-            />
-          ))}
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Hero() {
   const reduce = useReducedMotion();
@@ -68,7 +30,7 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-paper bg-survey-grid">
-      <div className="mx-auto grid max-w-[1180px] items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:py-20">
+      <div className="mx-auto grid max-w-[1440px] items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:py-20">
         {/* ---- copy ---- */}
         <div className="max-w-xl">
           <motion.p {...rise(0)} className="u-eyebrow text-brick-lit">

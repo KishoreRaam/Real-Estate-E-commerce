@@ -248,6 +248,11 @@ const realLayout = {
   featuredId: "p-3",
 };
 
+// Named export for the real-photo layout — used directly by the landing
+// page's live demo section, which wants this one specifically (not whichever
+// layout `fullLayouts` happens to resolve to).
+export const vadasithurLayout = realLayout;
+
 // Lookup for full geometry by layout id. Entries without full geometry yet
 // (summary-only rows in `layouts` below) are absent here — callers fall back
 // to the generic `layout` mock sheet until their real data lands.

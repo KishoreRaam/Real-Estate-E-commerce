@@ -42,9 +42,14 @@ export default function Dashboard() {
                 <VerifiedStamp status={relator.verification} date={relator.verifiedOn} />
               </div>
             </div>
-            <Button as={Link} to="/relator/upload" arrow className="self-start md:self-auto">
-              Upload new layout
-            </Button>
+            <div className="flex shrink-0 flex-wrap items-center gap-3 self-start md:self-auto">
+              <Button as={Link} to="/relator/documents/upload" variant="ghost" arrow>
+                Upload encumbrance certificate
+              </Button>
+              <Button as={Link} to="/relator/upload" arrow>
+                Upload new layout
+              </Button>
+            </div>
           </div>
 
           {/* portfolio numbers */}

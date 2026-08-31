@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Wordmark from "../shared/Wordmark";
 import Button from "../shared/Button";
+import useAuth from "../shared/useAuth";
+import ScrollProgress from "./ScrollProgress";
 
 /* Buyer-side links. Hash targets stay as plain anchors so they scroll; real
  * paths use Link so navigation stays client-side instead of reloading. */
@@ -28,7 +30,8 @@ function NavItem({ item, className, onClick }) {
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const deskLink = "u-fact text-[0.78rem] text-graphite/80 transition-colors hover:text-graphite";
+  const { session, role, signOut } = useAuth();
+  const deskLink = "u-fact text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite";
 
   return (
     <header className="sticky top-0 z-40 border-b border-graphite/12 bg-paper/85 backdrop-blur-md">
@@ -41,7 +44,7 @@ export default function Nav() {
             "repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-graphite) 22%, transparent) 0 1px, transparent 1px 24px)",
         }}
       />
-      <nav className="mx-auto flex max-w-[1180px] items-center justify-between px-5 py-3.5 sm:px-8">
+      <nav className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-3.5 sm:px-8">
         <Link to="/" className="rounded-sm" aria-label="Kaani home">
           <Wordmark />
         </Link>
@@ -60,10 +63,33 @@ export default function Nav() {
           <span aria-hidden="true" className="h-4 w-px bg-graphite/25" />
           <Link
             to="/relator"
-            className="u-fact text-[0.78rem] text-graphite/80 transition-colors hover:text-graphite"
+            className="u-fact text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite"
           >
-            List your layout
+            {role === "relator" ? "Go to dashboard" : "List your layout"}
           </Link>
+
+          <span aria-hidden="true" className="h-4 w-px bg-graphite/25" />
+
+          {session ? (
+            <>
+              <span className="u-fact text-[0.78rem] text-graphite/84">Signed in as {session.name}</span>
+              <Button variant="link" onClick={signOut}>
+                Sign out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className={deskLink}>
+                Sign in
+              </Link>
+              <Link
+                to="/signup"
+                className="u-fact text-[0.78rem] text-graphite transition-colors hover:text-ink"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
 
           <Button as={Link} to="/plots" variant="ghost" arrow className="!px-4 !py-2.5">
             Open a layout
@@ -91,7 +117,7 @@ export default function Nav() {
                 <NavItem
                   item={l}
                   onClick={() => setOpen(false)}
-                  className="block py-2.5 font-body text-lg text-graphite/80"
+                  className="block py-2.5 font-body text-lg text-graphite/88"
                 />
               </li>
             ))}
@@ -101,10 +127,44 @@ export default function Nav() {
             <Link
               to="/relator"
               onClick={() => setOpen(false)}
-              className="block py-2.5 font-body text-lg text-graphite/80"
+              className="block py-2.5 font-body text-lg text-graphite/88"
             >
-              List your layout
+              {role === "relator" ? "Go to dashboard" : "List your layout"}
             </Link>
+          </div>
+
+          <div className="mt-1 border-t border-graphite/12 pt-3">
+            {session ? (
+              <div className="flex items-center justify-between py-2">
+                <span className="u-fact text-[0.78rem] text-graphite/84">Signed in as {session.name}</span>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    signOut();
+                    setOpen(false);
+                  }}
+                >
+                  Sign out
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="block py-2.5 font-body text-lg text-graphite/88"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setOpen(false)}
+                  className="block py-2.5 font-body text-lg text-graphite"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
 
           <Button as={Link} to="/plots" variant="primary" arrow className="mt-3 w-full" onClick={() => setOpen(false)}>
@@ -112,6 +172,8 @@ export default function Nav() {
           </Button>
         </div>
       )}
+
+      <ScrollProgress />
     </header>
   );
 }
