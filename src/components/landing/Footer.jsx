@@ -81,7 +81,7 @@ export default function Footer() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brick opacity-75"></span>
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brick"></span>
               </span>
-              Created By Raam
+              Crafted By Raam
             </a>
           </div>
         </div>
