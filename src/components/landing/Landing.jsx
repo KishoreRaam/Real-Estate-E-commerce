@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import Nav from "./Nav";
 import Hero from "./Hero";
 import Differentiation from "./Differentiation";
@@ -13,6 +13,9 @@ import Footer from "./Footer";
 const LiveDemo = lazy(() => import("./LiveDemo"));
 // The 3D teaser shell; its three.js chunk loads only when scrolled near.
 const Town3DPreview = lazy(() => import("./Town3DPreview"));
+// Scroll-scrubbed drone story (pulls in GSAP + ScrollTrigger + MotionPath).
+// Fetched only once the reader gets within a viewport of it — see DroneSurveySlot.
+const DroneSurvey = lazy(() => import("./DroneSurvey"));
 
 /* On wide screens, the centered 1440px column leaves the flanks bare. Every
  * section already paints its own bg-survey-grid edge-to-edge (sections have
@@ -50,6 +53,45 @@ function LiveDemoFallback() {
   );
 }
 
+/* Holds the drone section's place until it's needed. The reserved height
+ * roughly matches the pinned section's real scroll length (frame + 300vh of
+ * pin), so swapping it in doesn't shove everything below by several
+ * screens. Reduced motion renders a short, stacked version instead. */
+function DroneSurveyFallback({ innerRef }) {
+  return (
+    <section ref={innerRef} aria-hidden="true" className="relative bg-paper bg-survey-grid">
+      <div className="min-h-[100svh] motion-safe:min-h-[400svh]" />
+    </section>
+  );
+}
+
+function DroneSurveySlot() {
+  const ref = useRef(null);
+  const [near, setNear] = useState(() => typeof IntersectionObserver === "undefined");
+
+  useEffect(() => {
+    if (near) return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "100% 0px" },
+    );
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [near]);
+
+  if (!near) return <DroneSurveyFallback innerRef={ref} />;
+  return (
+    <Suspense fallback={<DroneSurveyFallback />}>
+      <DroneSurvey />
+    </Suspense>
+  );
+}
+
 export default function Landing() {
   return (
     <>
@@ -59,6 +101,7 @@ export default function Landing() {
       <main>
         <Hero />
         <Differentiation />
+        <DroneSurveySlot />
         <PaperTrail />
         <HowWeVerify />
         <Suspense fallback={<LiveDemoFallback />}>

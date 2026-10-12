@@ -180,6 +180,24 @@ body {
   animation: cloud-drift 38s linear infinite;
 }
 
+/* Drone survey: rotor blades spin, and a scan line sweeps the camera
+ * footprint. Both are pure CSS so the scroll timeline only drives position. */
+@keyframes rotor-spin {
+  to { transform: rotate(360deg); }
+}
+.drone-rotor {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rotor-spin 0.32s linear infinite;
+}
+@keyframes footprint-scan {
+  0%, 100% { transform: translateY(-64px); }
+  50%      { transform: translateY(64px); }
+}
+.drone-scan {
+  animation: footprint-scan 1.6s ease-in-out infinite;
+}
+
 /* Reduced motion: cut drift, sway, reveal, smooth-scroll -------------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -192,6 +210,8 @@ body {
   }
   .survey-drift,
   .cloud-shadow,
+  .drone-rotor,
+  .drone-scan,
   .drive-r,
   .drive-l { animation: none; }
   /* park the traffic off the road rather than freezing it mid-carriageway */
