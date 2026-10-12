@@ -31,7 +31,7 @@ function NavItem({ item, className, onClick }) {
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const { session, role, signOut } = useAuth();
-  const deskLink = "u-fact text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite";
+  const deskLink = "u-fact whitespace-nowrap text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite";
 
   return (
     <header className="sticky top-0 z-40 border-b border-graphite/12 bg-paper/85 backdrop-blur-md">
@@ -44,12 +44,12 @@ export default function Nav() {
             "repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-graphite) 22%, transparent) 0 1px, transparent 1px 24px)",
         }}
       />
-      <nav className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-3.5 sm:px-8">
-        <Link to="/" className="rounded-sm" aria-label="Kaani home">
+      <nav className="mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-5 py-3.5 sm:px-8">
+        <Link to="/" className="shrink-0 rounded-sm" aria-label="Kaani home">
           <Wordmark />
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           <ul className="flex items-center gap-7">
             {LINKS.map((l) => (
               <li key={l.label}>
@@ -63,7 +63,7 @@ export default function Nav() {
           <span aria-hidden="true" className="h-4 w-px bg-graphite/25" />
           <Link
             to="/relator"
-            className="u-fact text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite"
+            className="u-fact whitespace-nowrap text-[0.78rem] text-graphite/88 transition-colors hover:text-graphite"
           >
             {role === "relator" ? "Go to dashboard" : "List your layout"}
           </Link>
@@ -72,7 +72,12 @@ export default function Nav() {
 
           {session ? (
             <>
-              <span className="u-fact text-[0.78rem] text-graphite/84">Signed in as {session.name}</span>
+              <span
+                className="hidden max-w-[16rem] truncate u-fact whitespace-nowrap text-[0.78rem] text-graphite/84 xl:inline"
+                title={`Signed in as ${session.name}`}
+              >
+                Signed in as {session.name}
+              </span>
               <Button variant="link" onClick={signOut}>
                 Sign out
               </Button>
@@ -84,7 +89,7 @@ export default function Nav() {
               </Link>
               <Link
                 to="/signup"
-                className="u-fact text-[0.78rem] text-graphite transition-colors hover:text-ink"
+                className="u-fact whitespace-nowrap text-[0.78rem] text-graphite transition-colors hover:text-ink"
               >
                 Sign up
               </Link>
@@ -98,7 +103,7 @@ export default function Nav() {
 
         {/* mobile */}
         <button
-          className="flex flex-col gap-1.5 p-2 md:hidden"
+          className="flex flex-col gap-1.5 p-2 lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -110,7 +115,7 @@ export default function Nav() {
       </nav>
 
       {open && (
-        <div className="border-t border-graphite/12 px-5 py-4 md:hidden">
+        <div className="border-t border-graphite/12 px-5 py-4 lg:hidden">
           <ul className="flex flex-col gap-1">
             {LINKS.map((l) => (
               <li key={l.label}>
