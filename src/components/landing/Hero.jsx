@@ -5,7 +5,7 @@ import PlotOverlay from "../shared/PlotOverlay";
 import PlotTitleBlock from "../shared/PlotTitleBlock";
 import Button from "../shared/Button";
 import CoordFrame from "../shared/CoordFrame";
-import { layout } from "../shared/plotData";
+import { sampleLayout as layout } from "../shared/layoutLoader";
 
 export default function Hero() {
   const reduce = useReducedMotion();

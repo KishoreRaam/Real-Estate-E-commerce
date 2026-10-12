@@ -1,4 +1,5 @@
 import VerifiedStamp from "./VerifiedStamp";
+import { facingFact } from "./plotInsights";
 import TypeIn from "./TypeIn";
 
 /* A survey drawing's title block — the record docked to the bottom of the sheet,
@@ -44,7 +45,7 @@ export default function PlotTitleBlock({ plot, layout, typing = false }) {
         </div>
 
         <Cell label="Dimensions" value={plot.dimensions} />
-        <Cell label="Facing" value={plot.facing} />
+        <Cell label="Facing" value={facingFact(plot)} />
         <Cell label="Survey no." value={plot.survey} className="hidden sm:flex" />
         <Cell label="Guide price" value={plot.guidePrice} className="hidden md:flex lg:flex" />
       </div>

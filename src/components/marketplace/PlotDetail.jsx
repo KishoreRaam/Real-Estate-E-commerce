@@ -1,12 +1,15 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import Nav from "../landing/Nav";
 import Footer from "../landing/Footer";
 import PlotOverlay from "../shared/PlotOverlay";
 import PlotRecordCard from "../shared/PlotRecordCard";
 import Button from "../shared/Button";
 import VerifiedStamp from "../shared/VerifiedStamp";
-import { layout, layouts, fullLayouts } from "../shared/plotData";
+import { layouts } from "../shared/plotData";
+import { loadLayout } from "../shared/layoutLoader";
+import { filtersFromParams, isFilterActive, plotMatches, writeFiltersToParams } from "../shared/plotInsights";
+import PlotFilters, { NoPlotsMatch } from "./PlotFilters";
 import { publicRelators } from "../relator/relatorData";
 import Toast from "../shared/Toast";
 import View3DBoundary from "../map/View3DBoundary";
@@ -28,8 +31,8 @@ export default function PlotDetail() {
     publicRelators.find((r) => r.listingIds.includes(meta.id)) ?? publicRelators[0];
 
   // Geometry falls back to the shared placeholder sheet until a layout has
-  // its own real trace registered in `fullLayouts`.
-  const activeLayout = fullLayouts[meta.id] ?? layout;
+  // its own real trace; insights are merged by the loader.
+  const activeLayout = loadLayout(meta.id);
 
   const [selectedId, setSelectedId] = useState(activeLayout.featuredId);
   const [hoveredId, setHoveredId] = useState(null);
@@ -39,17 +42,24 @@ export default function PlotDetail() {
     [selectedId, activeLayout],
   );
 
-  /* One filter, read by both renderers and the plot list. Filtering only
-   * dims: a plot never moves or disappears, and a selected plot stays
-   * selected even if the filter excludes it. */
-  const [facing, setFacing] = useState(null);
-  const facings = useMemo(
-    () => [...new Set(activeLayout.plots.map((p) => p.facing).filter(Boolean))],
-    [activeLayout],
+  /* Buyer filters live in the URL (?facing=E,NE&corner=1) so a filtered view
+   * can be shared — enum values only, nothing personal. One filter state is
+   * read by the 2D map, the 3D view and the plot list. Filtering only dims:
+   * a plot never moves or disappears, stays focusable and clickable, and a
+   * selected plot stays selected even if the filter excludes it. */
+  const [params, setParams] = useSearchParams();
+  const filters = useMemo(() => filtersFromParams(params), [params]);
+  const setFilters = useCallback(
+    (next) => setParams((prev) => writeFiltersToParams(prev, next), { replace: true }),
+    [setParams],
   );
+  const resetFilters = useCallback(() => setFilters({ facing: [], corner: false }), [setFilters]);
   const matchIds = useMemo(
-    () => (facing ? new Set(activeLayout.plots.filter((p) => p.facing === facing).map((p) => p.id)) : null),
-    [facing, activeLayout],
+    () =>
+      isFilterActive(filters)
+        ? new Set(activeLayout.plots.filter((p) => plotMatches(p, filters)).map((p) => p.id))
+        : null,
+    [filters, activeLayout],
   );
 
   // 2D is the default and the source of truth; 3D is a second renderer over
@@ -153,27 +163,14 @@ export default function PlotDetail() {
                 </div>
               </div>
 
-              {/* facing filter — shared by 2D, 3D and the plot list */}
-              {facings.length > 1 && (
-                <div role="group" aria-label="Filter plots by facing" className="mt-3 flex flex-wrap items-center gap-1.5">
-                  <span className="mr-1 u-eyebrow text-graphite/84" style={{ fontSize: "0.54rem" }}>Facing</span>
-                  {[null, ...facings].map((f) => (
-                    <button
-                      key={f ?? "all"}
-                      type="button"
-                      aria-pressed={facing === f}
-                      onClick={() => setFacing(f)}
-                      className={
-                        "border px-2 py-0.5 u-fact text-[0.66rem] transition-colors " +
-                        (facing === f ? "border-graphite bg-graphite/10 text-graphite" : "border-graphite/20 text-graphite/80 hover:border-graphite/45")
-                      }
-                      style={{ borderRadius: "2px" }}
-                    >
-                      {f ?? "All"}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* buyer filters — shared by 2D, 3D and the plot list */}
+              <PlotFilters
+                plots={activeLayout.plots}
+                filters={filters}
+                onChange={setFilters}
+                matchCount={matchIds?.size ?? activeLayout.plots.length}
+              />
+              {matchIds && matchIds.size === 0 && <NoPlotsMatch onReset={resetFilters} />}
 
               <div
                 className="mt-3 border border-graphite/15 p-2"
@@ -244,7 +241,7 @@ export default function PlotDetail() {
 
             {/* record + plot list */}
             <div className="flex flex-col gap-5">
-              <PlotRecordCard plot={selected} layout={activeLayout} />
+              <PlotRecordCard plot={selected} layout={activeLayout} sampleInsights={activeLayout.insightsSource === "sample"} />
 
               <Link
                 to={`/plots/${meta.id}/history`}

@@ -4,7 +4,7 @@ import PlotOverlay from "../shared/PlotOverlay";
 import PlotTitleBlock from "../shared/PlotTitleBlock";
 import CoordFrame from "../shared/CoordFrame";
 import Button from "../shared/Button";
-import { vadasithurLayout } from "../shared/plotData";
+import { vadasithurLayout } from "../shared/layoutLoader";
 
 /* The one non-hero, fully-interactive embed of PlotOverlay on the landing
  * page — same component, `mode="detail"` instead of `"hero"`, so there's no

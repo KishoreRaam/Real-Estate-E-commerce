@@ -5,7 +5,8 @@ import Footer from "../landing/Footer";
 import PlotOverlay from "../shared/PlotOverlay";
 import PlotEditPanel from "./PlotEditPanel";
 import Button from "../shared/Button";
-import { layout, isFlagged } from "../shared/plotData";
+import { isFlagged } from "../shared/plotData";
+import { sampleLayout as layout } from "../shared/layoutLoader";
 import { uploads } from "./relatorData";
 
 /* Seed an editable draft from the trace. Dimensions arrive as "30 × 50 ft";
@@ -169,6 +170,7 @@ export default function ConfirmExtraction() {
                 onChange={updateDraft}
                 onConfirm={() => selected && confirmPlot(selected.id)}
                 onUnconfirm={() => selected && unconfirmPlot(selected.id)}
+                sampleInsights={layout.insightsSource === "sample"}
               />
 
               {/* the gate, made legible */}

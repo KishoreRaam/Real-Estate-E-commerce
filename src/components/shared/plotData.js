@@ -38,21 +38,23 @@ function centroid(points) {
 }
 
 // Per-plot facts. Kept plausible for Coimbatore, but they are example data.
+// Facing / corner / road sides are NOT here: they're extraction insights,
+// merged in by shared/layoutLoader.js (sample values: src/mock/plotInsights.js).
 // `conf` is the mock confidence the OpenCV trace would report for that boundary
 // (0–1). The relator confirm/edit flow reads it; buyer views ignore it.
 const FACTS = [
-  { no: 1, area: 1620, dim: "30 × 54 ft", facing: "East", road: 30, survey: "114/2A", status: "verified", pps: 2450, conf: 0.97 },
-  { no: 2, area: 1500, dim: "30 × 50 ft", facing: "East", road: 30, survey: "114/2A", status: "verified", pps: 2450, conf: 0.95 },
-  { no: 3, area: 1500, dim: "30 × 50 ft", facing: "East", road: 30, survey: "114/2B", status: "pending", pps: 2400, conf: 0.71 },
-  { no: 4, area: 1800, dim: "36 × 50 ft", facing: "East", road: 30, survey: "114/2B", status: "verified", pps: 2500, conf: 0.93 },
-  { no: 5, area: 1500, dim: "30 × 50 ft", facing: "East", road: 30, survey: "114/3", status: "verified", pps: 2500, conf: 0.48 },
-  { no: 6, area: 2040, dim: "34 × 60 ft", facing: "North", road: 30, survey: "114/3", status: "verified", pps: 2600, conf: 0.96 },
-  { no: 7, area: 1620, dim: "30 × 54 ft", facing: "West", road: 24, survey: "115/1A", status: "verified", pps: 2300, conf: 0.68 },
-  { no: 8, area: 1500, dim: "30 × 50 ft", facing: "West", road: 24, survey: "115/1A", status: "verified", pps: 2300, conf: 0.94 },
-  { no: 9, area: 1847, dim: "33 × 56 ft", facing: "West", road: 24, survey: "115/1B", status: "verified", pps: 2350, conf: 0.98 },
-  { no: 10, area: 1500, dim: "30 × 50 ft", facing: "West", road: 24, survey: "115/1B", status: "pending", pps: 2300, conf: 0.91 },
-  { no: 11, area: 1500, dim: "30 × 50 ft", facing: "West", road: 24, survey: "115/2", status: "verified", pps: 2350, conf: 0.62 },
-  { no: 12, area: 1920, dim: "32 × 60 ft", facing: "South", road: 24, survey: "115/2", status: "verified", pps: 2400, conf: 0.55 },
+  { no: 1, area: 1620, dim: "30 × 54 ft", road: 30, survey: "114/2A", status: "verified", pps: 2450, conf: 0.97 },
+  { no: 2, area: 1500, dim: "30 × 50 ft", road: 30, survey: "114/2A", status: "verified", pps: 2450, conf: 0.95 },
+  { no: 3, area: 1500, dim: "30 × 50 ft", road: 30, survey: "114/2B", status: "pending", pps: 2400, conf: 0.71 },
+  { no: 4, area: 1800, dim: "36 × 50 ft", road: 30, survey: "114/2B", status: "verified", pps: 2500, conf: 0.93 },
+  { no: 5, area: 1500, dim: "30 × 50 ft", road: 30, survey: "114/3", status: "verified", pps: 2500, conf: 0.48 },
+  { no: 6, area: 2040, dim: "34 × 60 ft", road: 30, survey: "114/3", status: "verified", pps: 2600, conf: 0.96 },
+  { no: 7, area: 1620, dim: "30 × 54 ft", road: 24, survey: "115/1A", status: "verified", pps: 2300, conf: 0.68 },
+  { no: 8, area: 1500, dim: "30 × 50 ft", road: 24, survey: "115/1A", status: "verified", pps: 2300, conf: 0.94 },
+  { no: 9, area: 1847, dim: "33 × 56 ft", road: 24, survey: "115/1B", status: "verified", pps: 2350, conf: 0.98 },
+  { no: 10, area: 1500, dim: "30 × 50 ft", road: 24, survey: "115/1B", status: "pending", pps: 2300, conf: 0.91 },
+  { no: 11, area: 1500, dim: "30 × 50 ft", road: 24, survey: "115/2", status: "verified", pps: 2350, conf: 0.62 },
+  { no: 12, area: 1920, dim: "32 × 60 ft", road: 24, survey: "115/2", status: "verified", pps: 2400, conf: 0.55 },
 ];
 
 /* Confidence tiers. Only "high" is safe to auto-accept; "review" and "low" are
@@ -89,7 +91,6 @@ function buildTier(startNo, tier) {
       centroid: centroid(points),
       areaSqft: fact.area,
       dimensions: fact.dim,
-      facing: fact.facing,
       roadFt: fact.road,
       survey: fact.survey,
       status: fact.status,
@@ -171,7 +172,7 @@ const realLayout = {
       centroid: [179, 81],
       areaSqft: 2800,
       dimensions: "56 × 50 ft",
-      facing: "East",
+     
       roadFt: 20,
       survey: "212/1",
       status: "pending",
@@ -187,7 +188,7 @@ const realLayout = {
       centroid: [308, 69],
       areaSqft: 3200,
       dimensions: "58 × 55 ft",
-      facing: "East",
+     
       roadFt: 20,
       survey: "212/2",
       status: "verified",
@@ -203,7 +204,7 @@ const realLayout = {
       centroid: [247, 141],
       areaSqft: 4600,
       dimensions: "76 × 60 ft",
-      facing: "North",
+     
       roadFt: 18,
       survey: "213/1",
       status: "verified",
@@ -219,7 +220,7 @@ const realLayout = {
       centroid: [79, 124],
       areaSqft: 2500,
       dimensions: "50 × 50 ft",
-      facing: "West",
+     
       roadFt: 18,
       survey: "213/2",
       status: "pending",
@@ -235,7 +236,7 @@ const realLayout = {
       centroid: [231, 222],
       areaSqft: 1900,
       dimensions: "44 × 43 ft",
-      facing: "South",
+     
       roadFt: 18,
       survey: "213/3",
       status: "verified",

@@ -281,6 +281,13 @@ function PlotShape({
   const { minX, minY } = bbox(plot.points);
 
   return (
+    <g>
+      {/* filtered out over aerial ground: fading a thin line alone barely
+          registers against trees and roofs, so wash the plot's interior
+          toward paper too. The outline stays — colour is never the only cue. */}
+      {dimmed && onTerrain && (
+        <polygon points={pts} fill="var(--color-paper)" fillOpacity="0.62" pointerEvents="none" aria-hidden="true" />
+      )}
     <g opacity={dimmed ? 0.3 : 1} style={{ transition: "opacity 200ms ease" }}>
       {/* dark casing under the boundary, so the light core reads over any ground */}
       {onTerrain && (
@@ -430,6 +437,7 @@ function PlotShape({
       >
         {plot.no}
       </text>
+    </g>
     </g>
   );
 }

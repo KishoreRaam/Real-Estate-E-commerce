@@ -1,5 +1,6 @@
 import VerifiedStamp from "./VerifiedStamp";
 import TypeIn from "./TypeIn";
+import { facingFact, facingWord } from "./plotInsights";
 
 function Fact({ label, value }) {
   return (
@@ -12,9 +13,58 @@ function Fact({ label, value }) {
   );
 }
 
+/* Neutral chip — the PaperTrail "source" chip, never brick (brick = verified). */
+function Chip({ children, muted = false }) {
+  return (
+    <span
+      className={
+        "inline-flex items-center border px-2 py-1 u-fact text-[0.64rem] " +
+        (muted ? "border-dashed border-concrete/70 text-graphite/72" : "border-concrete/70 text-graphite/90")
+      }
+      style={{ borderRadius: "2px", letterSpacing: "0.04em" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/* Facts read off the sketch. Each chip is driven by its own field and only
+ * renders when that field is present — a plot extraction never reached has
+ * none of them, and gets no chips at all. Text always carries the meaning;
+ * the border style is decoration. Printed-vs-drawn dimension checks are
+ * deliberately NOT read here: they're relator-only (PlotEditPanel). */
+function InsightChips({ plot }) {
+  const chips = [];
+  if (plot.facing === null) {
+    chips.push(
+      <Chip key="facing" muted>
+        Orientation not on sketch
+      </Chip>,
+    );
+  } else if (facingWord(plot.facing)) {
+    chips.push(<Chip key="facing">{facingWord(plot.facing)}-facing</Chip>);
+  }
+  if (plot.is_corner === true) chips.push(<Chip key="corner">Corner plot</Chip>);
+  if (Number.isInteger(plot.road_edge_count) && plot.road_edge_count > 0) {
+    chips.push(
+      <Chip key="roads">
+        {plot.road_edge_count} road side{plot.road_edge_count === 1 ? "" : "s"}
+      </Chip>,
+    );
+  }
+  if (!chips.length) return null;
+  return (
+    <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="From the sketch">
+      {chips.map((c) => (
+        <li key={c.key}>{c}</li>
+      ))}
+    </ul>
+  );
+}
+
 /* The record behind a plot — reused in the hero and the detail view.
  * `typing` runs the reveal treatment (hero only). */
-export default function PlotRecordCard({ plot, layout, typing = false, className = "" }) {
+export default function PlotRecordCard({ plot, layout, typing = false, sampleInsights = false, className = "" }) {
   if (!plot) return null;
   const area = plot.areaSqft.toLocaleString("en-IN");
 
@@ -43,9 +93,11 @@ export default function PlotRecordCard({ plot, layout, typing = false, className
           <span className="u-fact text-sm text-graphite/84">sq ft</span>
         </div>
 
+        <InsightChips plot={plot} />
+
         <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3.5">
           <Fact label="Dimensions" value={plot.dimensions} />
-          <Fact label="Facing" value={plot.facing} />
+          <Fact label="Facing" value={facingFact(plot)} />
           <Fact label="Road width" value={`${plot.roadFt} ft`} />
           <Fact label="Survey no." value={plot.survey} />
           <Fact label="Guide price" value={plot.guidePrice} />
@@ -59,6 +111,12 @@ export default function PlotRecordCard({ plot, layout, typing = false, className
           {layout?.name}
         </span>
       </div>
+      {/* while insights are mocked, say so on the panel itself */}
+      {sampleInsights && (
+        <p className="border-t border-dashed border-graphite/15 px-5 py-2 u-fact text-[0.62rem] text-graphite/72">
+          Sample insights — facing, corner and road sides are example data, not yet read from the sketch.
+        </p>
+      )}
     </div>
   );
 }

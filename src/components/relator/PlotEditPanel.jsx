@@ -37,7 +37,44 @@ function Field({ label, value, onChange, suffix, id, inputMode = "numeric" }) {
   );
 }
 
-export default function PlotEditPanel({ plot, draft, confirmed, onChange, onConfirm, onUnconfirm }) {
+/* Printed-vs-drawn dimension check. RELATOR VIEW ONLY — buyers never see
+ * it (PlotRecordCard doesn't read the field). Neutral by design: it's a
+ * prompt to compare against the sheet, not a judgement on the plot, so the
+ * copy never says invalid / wrong / fraud / illegal, and it uses the
+ * "action" stamp's graphite + glyph, never brick. */
+function DimensionNote({ plot }) {
+  if (plot.dimension_check === "mismatch") {
+    const pct = Number.isFinite(plot.dimension_delta_pct) ? ` (${plot.dimension_delta_pct.toFixed(1)}%)` : "";
+    return (
+      <div className="border-b border-graphite/12 px-5 py-3.5">
+        <p className="flex items-start gap-2 border border-graphite/45 bg-paper px-3 py-2.5" style={{ borderRadius: "2px" }}>
+          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className="mt-1 shrink-0 text-graphite">
+            <circle cx="6" cy="6" r="5.2" fill="none" stroke="currentColor" strokeWidth="1.1" />
+            <path d="M6 3.2 V6.6 M6 8.7 V8.8" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+          <span className="flex flex-col gap-1">
+            <span className="text-sm text-graphite">
+              Printed dimensions differ from drawn shape<span className="u-fact">{pct}</span>
+            </span>
+            <span className="text-[0.82rem] leading-relaxed text-graphite/84">
+              Compare the boundary lengths below with your copy of the sheet before confirming.
+            </span>
+          </span>
+        </p>
+      </div>
+    );
+  }
+  if (plot.dimension_check === "unreadable") {
+    return (
+      <p className="border-b border-graphite/12 px-5 py-2.5 u-fact text-[0.68rem] text-graphite/80">
+        Printed dimensions couldn&rsquo;t be read on the sketch for this plot.
+      </p>
+    );
+  }
+  return null;
+}
+
+export default function PlotEditPanel({ plot, draft, confirmed, onChange, onConfirm, onUnconfirm, sampleInsights = false }) {
   if (!plot) {
     return (
       <div
@@ -100,6 +137,8 @@ export default function PlotEditPanel({ plot, draft, confirmed, onChange, onConf
         <p className="mt-2.5 text-sm leading-relaxed text-graphite/84">{tier.body}</p>
       </div>
 
+      <DimensionNote plot={plot} />
+
       {/* fields */}
       <div className="flex flex-col gap-4 px-5 py-4">
         <Field
@@ -132,6 +171,12 @@ export default function PlotEditPanel({ plot, draft, confirmed, onChange, onConf
           suffix="₹"
         />
       </div>
+
+      {sampleInsights && (
+        <p className="border-b border-dashed border-graphite/15 px-5 py-2 u-fact text-[0.62rem] text-graphite/72">
+          Sample insights — dimension checks are example data until sketch extraction lands.
+        </p>
+      )}
 
       {/* confirm */}
       <div className="border-t border-graphite/12 px-5 py-4">
