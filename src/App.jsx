@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/landing/Landing";
 import Browse from "./components/marketplace/Browse";
 import PlotDetail from "./components/marketplace/PlotDetail";
+import Plot3DPage from "./components/map/Plot3DPage";
 import DocumentHistory from "./components/marketplace/DocumentHistory";
 import Dashboard from "./components/relator/Dashboard";
 import LayoutUpload from "./components/relator/LayoutUpload";
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/plots" element={<Browse />} />
         <Route path="/plots/:layoutId" element={<PlotDetail />} />
         <Route path="/plots/:layoutId/history" element={<DocumentHistory />} />
+        <Route path="/plots/:layoutId/3d" element={<Plot3DPage />} />
         <Route path="/agents/:relatorId" element={<PublicProfile />} />
 
         {/* auth */}

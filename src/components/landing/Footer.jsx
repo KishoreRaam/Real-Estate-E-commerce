@@ -37,6 +37,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-graphite/12">
+      
         <div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Wordmark />

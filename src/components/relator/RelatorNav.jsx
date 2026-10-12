@@ -24,7 +24,7 @@ export default function RelatorNav() {
   };
 
   const linkClass = ({ isActive }) =>
-    "u-fact text-[0.78rem] transition-colors " +
+    "u-fact whitespace-nowrap text-[0.78rem] transition-colors " +
     (isActive ? "text-graphite" : "text-graphite/84 hover:text-graphite");
 
   return (
@@ -37,8 +37,8 @@ export default function RelatorNav() {
             "repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-graphite) 22%, transparent) 0 1px, transparent 1px 24px)",
         }}
       />
-      <nav className="mx-auto flex max-w-[1180px] items-center justify-between px-5 py-3.5 sm:px-8">
-        <div className="flex items-center gap-3">
+      <nav className="mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-5 py-3.5 sm:px-8">
+        <div className="flex shrink-0 items-center gap-3">
           <Link to="/" className="rounded-sm" aria-label="Kaani home">
             <Wordmark />
           </Link>
@@ -50,12 +50,12 @@ export default function RelatorNav() {
           </span>
         </div>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           <ul className="flex items-center gap-6">
             {LINKS.map((l) => (
               <li key={l.label}>
                 {l.to.includes("#") ? (
-                  <a href={l.to} className="u-fact text-[0.78rem] text-graphite/84 transition-colors hover:text-graphite">
+                  <a href={l.to} className="u-fact whitespace-nowrap text-[0.78rem] text-graphite/84 transition-colors hover:text-graphite">
                     {l.label}
                   </a>
                 ) : (
@@ -67,7 +67,15 @@ export default function RelatorNav() {
             ))}
           </ul>
           {session && (
-            <span className="u-fact text-[0.78rem] text-graphite/84">Signed in as {session.name}</span>
+            <>
+              <span aria-hidden="true" className="h-4 w-px bg-graphite/25" />
+              <span
+                className="hidden max-w-[16rem] truncate u-fact whitespace-nowrap text-[0.78rem] text-graphite/84 xl:inline"
+                title={`Signed in as ${session.name}`}
+              >
+                Signed in as {session.name}
+              </span>
+            </>
           )}
           <Button variant="link" onClick={handleSignOut}>
             Sign out
@@ -78,7 +86,7 @@ export default function RelatorNav() {
         </div>
 
         <button
-          className="flex flex-col gap-1.5 p-2 md:hidden"
+          className="flex flex-col gap-1.5 p-2 lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -90,7 +98,7 @@ export default function RelatorNav() {
       </nav>
 
       {open && (
-        <div className="border-t border-graphite/12 px-5 py-4 md:hidden">
+        <div className="border-t border-graphite/12 px-5 py-4 lg:hidden">
           <ul className="flex flex-col gap-1">
             {LINKS.map((l) => (
               <li key={l.label}>

@@ -11,6 +11,8 @@ import Footer from "./Footer";
 // Heaviest section on the page (a full PlotOverlay + sample layout) — split
 // into its own chunk so the hero paints before this ships to the client.
 const LiveDemo = lazy(() => import("./LiveDemo"));
+// The 3D teaser shell; its three.js chunk loads only when scrolled near.
+const Town3DPreview = lazy(() => import("./Town3DPreview"));
 
 /* On wide screens, the centered 1440px column leaves the flanks bare. Every
  * section already paints its own bg-survey-grid edge-to-edge (sections have
@@ -61,6 +63,9 @@ export default function Landing() {
         <HowWeVerify />
         <Suspense fallback={<LiveDemoFallback />}>
           <LiveDemo />
+        </Suspense>
+        <Suspense fallback={<LiveDemoFallback />}>
+          <Town3DPreview />
         </Suspense>
         <Agents />
         <FAQ />

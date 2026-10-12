@@ -134,6 +134,7 @@ function PlotShape({
   isFeatured,
   isSelected,
   isHovered,
+  dimmed, // filtered out — stays in place, recedes
   interactive,
   reveal, // "draw" | "instant" | "none"
   edit, // null | { tier, confirmed }
@@ -280,7 +281,7 @@ function PlotShape({
   const { minX, minY } = bbox(plot.points);
 
   return (
-    <g>
+    <g opacity={dimmed ? 0.28 : 1} style={{ transition: "opacity 200ms ease" }}>
       {/* dark casing under the boundary, so the light core reads over any ground */}
       {onTerrain && (
         <polygon
@@ -444,6 +445,7 @@ export default function PlotOverlay({
   className = "",
   showDimensionLeader = true,
   confirmedIds = [],
+  dimmedIds = [],
   showSketchBackdrop,
   terrain,
   terrainDetail,
@@ -467,6 +469,7 @@ export default function PlotOverlay({
   const detail = terrainDetail ?? (mode === "browse" ? "simple" : "full");
 
   const confirmedSet = useMemo(() => new Set(confirmedIds), [confirmedIds]);
+  const dimmedSet = useMemo(() => new Set(dimmedIds), [dimmedIds]);
 
   // Fire onReveal when the hero sequence finishes (or immediately if reduced).
   useEffect(() => {
@@ -635,6 +638,7 @@ export default function PlotOverlay({
             isFeatured={plot.id === featuredId}
             isSelected={plot.id === (selectedId ?? featuredId)}
             isHovered={plot.id === hoveredId}
+            dimmed={dimmedSet.has(plot.id)}
             interactive={interactive}
             reveal={reveal}
             edit={isEdit ? { tier: plot.tier, confirmed: confirmedSet.has(plot.id) } : null}

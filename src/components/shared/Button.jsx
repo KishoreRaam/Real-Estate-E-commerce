@@ -2,7 +2,7 @@
  * On the light ground the dark values do the work: primary is solid graphite,
  * ghost is a graphite outline. Dark blends in as UI rather than as a surface. */
 const base =
-  "inline-flex items-center justify-center gap-2 u-fact text-[0.8rem] uppercase transition-colors duration-200 focus-visible:outline-2 disabled:opacity-40";
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap u-fact text-[0.8rem] uppercase transition-colors duration-200 focus-visible:outline-2 disabled:opacity-40";
 
 const styles = {
   primary: "bg-graphite text-paper px-5 py-3 hover:bg-ink",

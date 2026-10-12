@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Nav from "../landing/Nav";
 import Footer from "../landing/Footer";
-import PlotOverlay from "../shared/PlotOverlay";
+import PlotMapExplorer from "../map/PlotMapExplorer";
+import usePlotMapState from "../map/usePlotMapState";
 import PlotRecordCard from "../shared/PlotRecordCard";
 import Button from "../shared/Button";
 import VerifiedStamp from "../shared/VerifiedStamp";
@@ -19,13 +19,9 @@ export default function PlotDetail() {
   // its own real trace registered in `fullLayouts`.
   const activeLayout = fullLayouts[meta.id] ?? layout;
 
-  const [selectedId, setSelectedId] = useState(activeLayout.featuredId);
-  const [hoveredId, setHoveredId] = useState(null);
-
-  const selected = useMemo(
-    () => activeLayout.plots.find((p) => p.id === selectedId) ?? null,
-    [selectedId, activeLayout],
-  );
+  // One map state for the 2D plan, the 3D view, the record card and the list.
+  const map = usePlotMapState(activeLayout, { initialSelectedId: activeLayout.featuredId });
+  const { selected, selectedId } = map;
 
   return (
     <>
@@ -83,20 +79,15 @@ export default function PlotDetail() {
                 <p className="u-eyebrow text-graphite/84" style={{ fontSize: "0.58rem" }}>
                   <span className="text-brick-lit">◈</span> Click a plot to open its record
                 </p>
-                <p className="u-fact text-[0.66rem] text-graphite/84">Scale {activeLayout.scale}</p>
+                <p className="u-fact text-[0.66rem] text-graphite/84">
+                  Scale {activeLayout.scale} ·{" "}
+                  <Link to={`/plots/${meta.id}/3d`} className="underline underline-offset-2 hover:text-graphite">
+                    Full-screen 3D
+                  </Link>
+                </p>
               </div>
-              <div
-                className="mt-3 border border-graphite/15 p-2"
-                style={{ borderRadius: "3px" }}
-              >
-                <PlotOverlay
-                  layout={activeLayout}
-                  mode="detail"
-                  selectedId={selectedId}
-                  hoveredId={hoveredId}
-                  onSelect={(p) => setSelectedId(p.id)}
-                  onHover={setHoveredId}
-                />
+              <div className="mt-3">
+                <PlotMapExplorer layout={activeLayout} map={map} />
               </div>
 
               {/* legend — states carry meaning, so they're spelled out */}
@@ -164,9 +155,9 @@ export default function PlotDetail() {
                     return (
                       <li key={p.id}>
                         <button
-                          onClick={() => setSelectedId(p.id)}
-                          onMouseEnter={() => setHoveredId(p.id)}
-                          onMouseLeave={() => setHoveredId(null)}
+                          onClick={() => map.select(p)}
+                          onMouseEnter={() => map.hover(p.id)}
+                          onMouseLeave={() => map.endHover(p.id)}
                           aria-pressed={active}
                           className={
                             "flex w-full items-center justify-between gap-3 border-b border-graphite/8 px-4 py-2.5 text-left transition-colors " +
