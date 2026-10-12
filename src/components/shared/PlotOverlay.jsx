@@ -141,6 +141,7 @@ function PlotShape({
   uid,
   onSelect,
   onHover,
+  dimmed = false, // filtered out: stays in place, faded — never hidden
 }) {
   const pts = pointsToString(plot.points);
   const [cx, cy] = plot.centroid;
@@ -280,7 +281,7 @@ function PlotShape({
   const { minX, minY } = bbox(plot.points);
 
   return (
-    <g>
+    <g opacity={dimmed ? 0.3 : 1} style={{ transition: "opacity 200ms ease" }}>
       {/* dark casing under the boundary, so the light core reads over any ground */}
       {onTerrain && (
         <polygon
@@ -447,6 +448,7 @@ export default function PlotOverlay({
   showSketchBackdrop,
   terrain,
   terrainDetail,
+  matchIds = null, // Set of plot ids passing the page's filter; null = no filter
 }) {
   const reduce = useReducedMotion();
   const uid = useId().replace(/:/g, "");
@@ -642,6 +644,7 @@ export default function PlotOverlay({
             uid={uid}
             onSelect={onSelect}
             onHover={setHovered}
+            dimmed={matchIds ? !matchIds.has(plot.id) : false}
           />
         ))}
 

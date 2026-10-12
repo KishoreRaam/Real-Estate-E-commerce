@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Nav from "../landing/Nav";
 import Footer from "../landing/Footer";
@@ -8,6 +8,18 @@ import Button from "../shared/Button";
 import VerifiedStamp from "../shared/VerifiedStamp";
 import { layout, layouts, fullLayouts } from "../shared/plotData";
 import { publicRelators } from "../relator/relatorData";
+import Toast from "../shared/Toast";
+import View3DBoundary from "../map/View3DBoundary";
+import { hasWebGL } from "../map/webgl";
+
+// three + R3F + drei live in their own chunk, fetched only when someone
+// actually switches to the 3D view.
+const Plot3DView = lazy(() => import("../map/Plot3DView"));
+
+const VIEWS = [
+  { id: "2d", label: "2D plan" },
+  { id: "3d", label: "3D" },
+];
 
 export default function PlotDetail() {
   const { layoutId } = useParams();
@@ -26,6 +38,38 @@ export default function PlotDetail() {
     () => activeLayout.plots.find((p) => p.id === selectedId) ?? null,
     [selectedId, activeLayout],
   );
+
+  /* One filter, read by both renderers and the plot list. Filtering only
+   * dims: a plot never moves or disappears, and a selected plot stays
+   * selected even if the filter excludes it. */
+  const [facing, setFacing] = useState(null);
+  const facings = useMemo(
+    () => [...new Set(activeLayout.plots.map((p) => p.facing).filter(Boolean))],
+    [activeLayout],
+  );
+  const matchIds = useMemo(
+    () => (facing ? new Set(activeLayout.plots.filter((p) => p.facing === facing).map((p) => p.id)) : null),
+    [facing, activeLayout],
+  );
+
+  // 2D is the default and the source of truth; 3D is a second renderer over
+  // the same selectedId / hoveredId / matchIds.
+  const [view, setView] = useState("2d");
+  const [toast, setToast] = useState(null);
+  const clearToast = useCallback(() => setToast(null), []);
+  const fallbackTo2D = useCallback((message) => {
+    setView("2d");
+    setHoveredId(null);
+    setToast(message);
+  }, []);
+  const chooseView = (id) => {
+    if (id === "3d" && !hasWebGL()) {
+      setToast("3D view needs WebGL, which this browser has turned off. Showing the 2D plan.");
+      return;
+    }
+    setHoveredId(null);
+    setView(id);
+  };
 
   return (
     <>
@@ -78,26 +122,104 @@ export default function PlotDetail() {
 
           {/* map + record */}
           <div className="mt-8 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-            <div>
-              <div className="flex items-center justify-between">
+            {/* min-w-0: the 3D box's min-height transfers through its aspect
+                ratio into a min-content width, which would widen this grid
+                column past the viewport on phones */}
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="u-eyebrow text-graphite/84" style={{ fontSize: "0.58rem" }}>
                   <span className="text-brick-lit">◈</span> Click a plot to open its record
                 </p>
-                <p className="u-fact text-[0.66rem] text-graphite/84">Scale {activeLayout.scale}</p>
+                <div className="flex items-center gap-4">
+                  <p className="u-fact text-[0.66rem] text-graphite/84">Scale {activeLayout.scale}</p>
+                  {/* view toggle — plain buttons, so it's keyboard-operable and
+                      stays visible above the canvas as the way out of 3D */}
+                  <div role="group" aria-label="Map view" className="flex border border-graphite/25" style={{ borderRadius: "2px" }}>
+                    {VIEWS.map((v) => (
+                      <button
+                        key={v.id}
+                        type="button"
+                        aria-pressed={view === v.id}
+                        onClick={() => chooseView(v.id)}
+                        className={
+                          "px-2.5 py-1 u-fact text-[0.68rem] transition-colors " +
+                          (view === v.id ? "bg-graphite text-paper" : "text-graphite/85 hover:bg-graphite/8")
+                        }
+                      >
+                        {v.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
+
+              {/* facing filter — shared by 2D, 3D and the plot list */}
+              {facings.length > 1 && (
+                <div role="group" aria-label="Filter plots by facing" className="mt-3 flex flex-wrap items-center gap-1.5">
+                  <span className="mr-1 u-eyebrow text-graphite/84" style={{ fontSize: "0.54rem" }}>Facing</span>
+                  {[null, ...facings].map((f) => (
+                    <button
+                      key={f ?? "all"}
+                      type="button"
+                      aria-pressed={facing === f}
+                      onClick={() => setFacing(f)}
+                      className={
+                        "border px-2 py-0.5 u-fact text-[0.66rem] transition-colors " +
+                        (facing === f ? "border-graphite bg-graphite/10 text-graphite" : "border-graphite/20 text-graphite/80 hover:border-graphite/45")
+                      }
+                      style={{ borderRadius: "2px" }}
+                    >
+                      {f ?? "All"}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <div
                 className="mt-3 border border-graphite/15 p-2"
                 style={{ borderRadius: "3px" }}
               >
-                <PlotOverlay
-                  layout={activeLayout}
-                  mode="detail"
-                  selectedId={selectedId}
-                  hoveredId={hoveredId}
-                  onSelect={(p) => setSelectedId(p.id)}
-                  onHover={setHoveredId}
-                />
+                {view === "2d" ? (
+                  <PlotOverlay
+                    layout={activeLayout}
+                    mode="detail"
+                    selectedId={selectedId}
+                    hoveredId={hoveredId}
+                    onSelect={(p) => setSelectedId(p.id)}
+                    onHover={setHoveredId}
+                    matchIds={matchIds}
+                  />
+                ) : (
+                  // same box ratio as the 2D sheet so toggling doesn't jump the
+                  // page; a floor keeps it usable on phones
+                  <div className="min-h-[300px] w-full" style={{ aspectRatio: `${activeLayout.width} / ${activeLayout.height}` }}>
+                    <View3DBoundary onFail={() => fallbackTo2D("The 3D view couldn't start on this device. Showing the 2D plan.")}>
+                      <Suspense
+                        fallback={
+                          <div className="flex h-full items-center justify-center u-fact text-[0.72rem] text-graphite/84">
+                            Loading 3D view…
+                          </div>
+                        }
+                      >
+                        <Plot3DView
+                          layout={activeLayout}
+                          selectedId={selectedId}
+                          hoveredId={hoveredId}
+                          matchIds={matchIds}
+                          onSelect={(p) => setSelectedId(p.id)}
+                          onHover={setHoveredId}
+                          onContextLost={() => fallbackTo2D("The 3D view lost its graphics context. Showing the 2D plan.")}
+                        />
+                      </Suspense>
+                    </View3DBoundary>
+                  </div>
+                )}
               </div>
+              {view === "3d" && (
+                <p className="mt-2 u-fact text-[0.64rem] text-graphite/84">
+                  The 3D view is illustrative. The 2D plan and the plot list are the record — and the keyboard-accessible way to pick a plot.
+                </p>
+              )}
 
               {/* legend — states carry meaning, so they're spelled out */}
               <ul className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 u-fact text-[0.66rem] text-graphite/84">
@@ -161,8 +283,9 @@ export default function PlotDetail() {
                 <ul className="max-h-[320px] overflow-y-auto">
                   {activeLayout.plots.map((p) => {
                     const active = p.id === selectedId;
+                    const dimmed = matchIds ? !matchIds.has(p.id) : false;
                     return (
-                      <li key={p.id}>
+                      <li key={p.id} className={dimmed ? "opacity-40" : undefined}>
                         <button
                           onClick={() => setSelectedId(p.id)}
                           onMouseEnter={() => setHoveredId(p.id)}
@@ -207,6 +330,7 @@ export default function PlotDetail() {
         </div>
       </main>
       <Footer />
+      <Toast message={toast} onDone={clearToast} />
     </>
   );
 }
