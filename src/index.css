@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Side-by-side only when the screen is actually wide: a portrait tablet or a
+ * phone in "desktop site" mode can be ≥1024px wide yet far taller than wide,
+ * where a 60/40 split leaves the stage tiny and the frame mostly empty. */
+@custom-variant wide (@media (min-width: 1024px) and (orientation: landscape));
+
 /* ------------------------------------------------------------------ *
  * Kaani — "Ground Truth" token system
  * Palette: Urban loft, light-first (+ one warm ground from Quiet luxury)

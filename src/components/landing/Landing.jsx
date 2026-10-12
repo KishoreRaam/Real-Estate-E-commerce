@@ -7,13 +7,17 @@ import HowWeVerify from "./HowWeVerify";
 import Agents from "./Agents";
 import FAQ from "./FAQ";
 import Footer from "./Footer";
+import StaticDroneSurvey from "./DroneSurveyStage";
 
 // Heaviest section on the page (a full PlotOverlay + sample layout) — split
 // into its own chunk so the hero paints before this ships to the client.
 const LiveDemo = lazy(() => import("./LiveDemo"));
-// Scroll-scrubbed drone story (pulls in GSAP + ScrollTrigger + MotionPath).
-// Fetched only once the reader gets within a viewport of it — see DroneSurveySlot.
-const DroneSurvey = lazy(() => import("./DroneSurvey"));
+// Scroll-scrubbed drone story (pulls in GSAP + ScrollTrigger + MotionPath,
+// ~58 KB gz). The static final frame ships in the main bundle and renders
+// immediately; the animated version is an upgrade — see DroneSurveySlot.
+let droneSurveyChunk;
+const loadDroneSurvey = () => (droneSurveyChunk ??= import("./DroneSurvey"));
+const DroneSurvey = lazy(loadDroneSurvey);
 
 /* On wide screens, the centered 1440px column leaves the flanks bare. Every
  * section already paints its own bg-survey-grid edge-to-edge (sections have
@@ -51,42 +55,63 @@ function LiveDemoFallback() {
   );
 }
 
-/* Holds the drone section's place until it's needed. The reserved height
- * roughly matches the pinned section's real scroll length (frame + 300vh of
- * pin), so swapping it in doesn't shove everything below by several
- * screens. Reduced motion renders a short, stacked version instead. */
-function DroneSurveyFallback({ innerRef }) {
-  return (
-    <section ref={innerRef} aria-hidden="true" className="relative bg-paper bg-survey-grid">
-      <div className="min-h-[100svh] motion-safe:min-h-[400svh]" />
-    </section>
-  );
-}
-
+/* Progressive enhancement, never a blank gap: the static section (final
+ * frame + all four beats as text) is what renders first. The GSAP chunk is
+ * fetched when the browser is idle or the reader gets within ~1.5 screens,
+ * and the pinned version is swapped in only if the section is still entirely
+ * BELOW the viewport at that moment. The two versions differ in height by
+ * a few screens; swapping while the reader is in or past the section would
+ * jump the page (Safari has no scroll anchoring to absorb it), so in that
+ * case — slow network, deep link, fast scroller — the static one just stays.
+ * Reduced motion never loads the chunk at all. */
 function DroneSurveySlot() {
   const ref = useRef(null);
-  const [near, setNear] = useState(() => typeof IntersectionObserver === "undefined");
+  const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
-    if (near) return undefined;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setNear(true);
-          io.disconnect();
-        }
-      },
-      { rootMargin: "100% 0px" },
-    );
-    io.observe(ref.current);
-    return () => io.disconnect();
-  }, [near]);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
-  if (!near) return <DroneSurveyFallback innerRef={ref} />;
+    let done = false;
+    const upgrade = () => {
+      if (done) return;
+      done = true;
+      loadDroneSurvey().then(
+        () => {
+          const el = ref.current;
+          if (el && el.getBoundingClientRect().top > window.innerHeight) setAnimated(true);
+        },
+        () => {}, // chunk failed (offline, deploy swap): static version stays
+      );
+    };
+
+    const idle = window.requestIdleCallback
+      ? window.requestIdleCallback(upgrade, { timeout: 2500 })
+      : window.setTimeout(upgrade, 1200);
+
+    let io;
+    if (typeof IntersectionObserver !== "undefined" && ref.current) {
+      io = new IntersectionObserver(([e]) => e.isIntersecting && upgrade(), { rootMargin: "150% 0px" });
+      io.observe(ref.current);
+    }
+
+    return () => {
+      done = true;
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
+      io?.disconnect();
+    };
+  }, []);
+
   return (
-    <Suspense fallback={<DroneSurveyFallback />}>
-      <DroneSurvey />
-    </Suspense>
+    <div ref={ref}>
+      {animated ? (
+        <Suspense fallback={<StaticDroneSurvey />}>
+          <DroneSurvey />
+        </Suspense>
+      ) : (
+        <StaticDroneSurvey />
+      )}
+    </div>
   );
 }
 
